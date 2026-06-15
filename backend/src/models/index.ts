@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
 import databaseConfig from '../config/database';
+import { initUserModel, User } from './User';
 
 type Environment = 'development' | 'test' | 'production';
 
@@ -24,4 +25,9 @@ export const sequelize = dbConfig.url
       sequelizeOptions
     );
 
-export { Sequelize };
+initUserModel(sequelize);
+
+export {
+  Sequelize,
+  User
+};
