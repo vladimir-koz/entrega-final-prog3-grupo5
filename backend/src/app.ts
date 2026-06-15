@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import routes from './routes';
+import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 
 const app = express();
 
@@ -20,11 +22,10 @@ app.get('/health', (_req: Request, res: Response) => {
     });
 });
 
-app.get('/api/health', (_req: Request, res: Response) => {
-    res.json({
-    status: 'ok',
-    message: 'API running',
-    });
-});
+
+app.use('/api', routes);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
