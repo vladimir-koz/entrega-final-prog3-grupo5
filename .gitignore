@@ -106,7 +106,7 @@ postgres_data/
 redis_data/
 
 # Docker
-.dockerignore
+
 docker-compose.override.yml
 
 # IDE and editors
@@ -131,7 +131,6 @@ Thumbs.db
 *.tmp
 
 # Package managers
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
