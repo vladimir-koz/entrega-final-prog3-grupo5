@@ -5,16 +5,12 @@ import { AppError } from '../utils/AppError';
 const dificultadesValidas = ['principiante', 'intermedio', 'avanzado'];
 
 function validarDatosExercise(data: ExerciseRequestBody, partial = false): void {
-  if (!partial && (!data.nombre || !data.grupoMuscular)) {
-    throw new AppError('Nombre y grupo muscular son obligatorios', 400);
+  if (!partial && !data.nombre) {
+    throw new AppError('El nombre del ejercicio es obligatorio', 400);
   }
 
   if (data.nombre !== undefined && data.nombre.trim().length < 2) {
     throw new AppError('El nombre debe tener al menos 2 caracteres', 400);
-  }
-
-  if (data.grupoMuscular !== undefined && data.grupoMuscular.trim().length < 2) {
-    throw new AppError('El grupo muscular debe tener al menos 2 caracteres', 400);
   }
 
   if (data.dificultad && !dificultadesValidas.includes(data.dificultad)) {
@@ -22,16 +18,19 @@ function validarDatosExercise(data: ExerciseRequestBody, partial = false): void 
   }
 }
 
-export async function listExercises() {
+export async function listExercises(userId: number) {
   const exercises = await Exercise.findAll({
+    where: { userId },
     order: [['nombre', 'ASC']]
   });
 
   return { exercises };
 }
 
-export async function getExerciseById(id: number) {
-  const exercise = await Exercise.findByPk(id);
+export async function getExerciseById(id: number, userId: number) {
+  const exercise = await Exercise.findOne({
+    where: { id, userId }
+  });
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);
@@ -40,15 +39,15 @@ export async function getExerciseById(id: number) {
   return { exercise };
 }
 
-export async function createExercise(data: ExerciseRequestBody) {
+export async function createExercise(data: ExerciseRequestBody, userId: number) {
   validarDatosExercise(data);
 
   const exercise = await Exercise.create({
     nombre: data.nombre.trim(),
     descripcion: data.descripcion?.trim() || null,
-    grupoMuscular: data.grupoMuscular.trim(),
-    equipamiento: data.equipamiento?.trim() || null,
-    dificultad: data.dificultad || 'principiante'
+    userId,
+    dificultad: data.dificultad || null,
+    imagen: data.imagen?.trim() || null
   });
 
   return {
@@ -57,10 +56,12 @@ export async function createExercise(data: ExerciseRequestBody) {
   };
 }
 
-export async function updateExercise(id: number, data: ExerciseRequestBody) {
+export async function updateExercise(id: number, data: ExerciseRequestBody, userId: number) {
   validarDatosExercise(data, true);
 
-  const exercise = await Exercise.findByPk(id);
+  const exercise = await Exercise.findOne({
+    where: { id, userId }
+  });
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);
@@ -69,9 +70,8 @@ export async function updateExercise(id: number, data: ExerciseRequestBody) {
   await exercise.update({
     nombre: data.nombre?.trim() ?? exercise.nombre,
     descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : exercise.descripcion,
-    grupoMuscular: data.grupoMuscular?.trim() ?? exercise.grupoMuscular,
-    equipamiento: data.equipamiento !== undefined ? data.equipamiento.trim() || null : exercise.equipamiento,
-    dificultad: data.dificultad ?? exercise.dificultad
+    dificultad: data.dificultad !== undefined ? data.dificultad : exercise.dificultad,
+    imagen: data.imagen !== undefined ? data.imagen.trim() || null : exercise.imagen
   });
 
   return {
@@ -80,8 +80,10 @@ export async function updateExercise(id: number, data: ExerciseRequestBody) {
   };
 }
 
-export async function deleteExercise(id: number) {
-  const exercise = await Exercise.findByPk(id);
+export async function deleteExercise(id: number, userId: number) {
+  const exercise = await Exercise.findOne({
+    where: { id, userId }
+  });
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);

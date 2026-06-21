@@ -39,8 +39,11 @@ export async function createRoutine(data: RoutineRequestBody, userId: number) {
   const routine = await Routine.create({
     nombre: data.nombre.trim(),
     descripcion: data.descripcion?.trim() || null,
-    objetivo: data.objetivo?.trim() || null,
-    userId
+    tipo: data.tipo?.trim() || null,
+    userId,
+    grupoMuscularEtiqueta: data.grupoMuscularEtiqueta?.trim() || null,
+    dificultad: data.dificultad?.trim() || null,
+    tiempoEstimado: data.tiempoEstimado ?? null
   });
 
   return {
@@ -63,7 +66,10 @@ export async function updateRoutine(id: number, data: RoutineRequestBody, userId
   await routine.update({
     nombre: data.nombre?.trim() ?? routine.nombre,
     descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : routine.descripcion,
-    objetivo: data.objetivo !== undefined ? data.objetivo.trim() || null : routine.objetivo
+    tipo: data.tipo !== undefined ? data.tipo.trim() || null : routine.tipo,
+    grupoMuscularEtiqueta: data.grupoMuscularEtiqueta !== undefined ? data.grupoMuscularEtiqueta.trim() || null : routine.grupoMuscularEtiqueta,
+    dificultad: data.dificultad !== undefined ? data.dificultad.trim() || null : routine.dificultad,
+    tiempoEstimado: data.tiempoEstimado !== undefined ? data.tiempoEstimado : routine.tiempoEstimado
   });
 
   return {

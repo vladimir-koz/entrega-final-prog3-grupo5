@@ -18,19 +18,31 @@ module.exports = {
                 type: Sequelize.TEXT,
                 allowNull: true
             },
-            objetivo: {
+            tipo: {
                 type: Sequelize.STRING,
                 allowNull: true
             },
             userId: {
                 type: Sequelize.INTEGER,
-                allowNull: false,
+                allowNull: true,
                 references: {
                     model: 'users',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
+            },
+            grupoMuscularEtiqueta: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
+            dificultad: {
+                type: Sequelize.STRING,
+                allowNull: true
+            },
+            tiempoEstimado: {
+                type: Sequelize.INTEGER,
+                allowNull: true
             },
             createdAt: {
                 type: Sequelize.DATE,
@@ -43,6 +55,8 @@ module.exports = {
                 defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
             }
         });
+
+        await queryInterface.addIndex('routines', ['userId']);
     },
 
     async down(queryInterface) {

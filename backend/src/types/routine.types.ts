@@ -1,5 +1,8 @@
 export interface RoutineRequestBody {
   nombre: string;
   descripcion?: string;
-  objetivo?: string;
+  tipo?: string;
+  grupoMuscularEtiqueta?: string;
+  dificultad?: string;
+  tiempoEstimado?: number;
 }

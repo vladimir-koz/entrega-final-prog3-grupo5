@@ -278,6 +278,7 @@ Rutas REST bajo /api/exercises.
 Tipos TypeScript para los requests.
 Registro del modelo en Sequelize.
 Registro de las rutas en el router principal.
+Asociacion de ejercicios al usuario autenticado mediante userId.
 Endpoints disponibles
 GET /api/exercises
 GET /api/exercises/:id
@@ -288,9 +289,8 @@ Ejemplo de body para crear un ejercicio
 {
   "nombre": "Sentadilla",
   "descripcion": "Ejercicio basico de piernas",
-  "grupoMuscular": "Piernas",
-  "equipamiento": "Barra",
-  "dificultad": "intermedio"
+  "dificultad": "intermedio",
+  "imagen": "sentadilla.jpg"
 }
 Módulo de rutinas
 
@@ -325,7 +325,10 @@ Ejemplo de body para crear una rutina
 {
   "nombre": "Rutina fuerza",
   "descripcion": "Rutina de tren inferior",
-  "objetivo": "Ganar fuerza"
+  "tipo": "Fuerza",
+  "grupoMuscularEtiqueta": "Piernas",
+  "dificultad": "intermedio",
+  "tiempoEstimado": 60
 }
 Verificación
 

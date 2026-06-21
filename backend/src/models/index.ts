@@ -41,6 +41,16 @@ Routine.belongsTo(User, {
   as: 'user'
 });
 
+User.hasMany(Exercise, {
+  foreignKey: 'userId',
+  as: 'exercises'
+});
+
+Exercise.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'user'
+});
+
 export {
   Exercise,
   Routine,

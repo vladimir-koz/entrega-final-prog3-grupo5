@@ -9,23 +9,29 @@ export interface RoutineAttributes {
     id: number;
     nombre: string;
     descripcion?: string | null;
-    objetivo?: string | null;
-    userId: number;
+    tipo?: string | null;
+    userId?: number | null;
+    grupoMuscularEtiqueta?: string | null;
+    dificultad?: string | null;
+    tiempoEstimado?: number | null;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 type RoutineCreationAttributes = Optional<
     RoutineAttributes,
-    'id' | 'descripcion' | 'objetivo' | 'createdAt' | 'updatedAt'
+    'id' | 'descripcion' | 'tipo' | 'userId' | 'grupoMuscularEtiqueta' | 'dificultad' | 'tiempoEstimado' | 'createdAt' | 'updatedAt'
 >;
 
 export class Routine extends Model<RoutineAttributes, RoutineCreationAttributes> implements RoutineAttributes {
     public id!: number;
     public nombre!: string;
     public descripcion!: string | null;
-    public objetivo!: string | null;
-    public userId!: number;
+    public tipo!: string | null;
+    public userId!: number | null;
+    public grupoMuscularEtiqueta!: string | null;
+    public dificultad!: string | null;
+    public tiempoEstimado!: number | null;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -50,13 +56,25 @@ export function initRoutineModel(sequelize: Sequelize): typeof Routine {
                 type: DataTypes.TEXT,
                 allowNull: true
             },
-            objetivo: {
+            tipo: {
                 type: DataTypes.STRING,
                 allowNull: true
             },
             userId: {
                 type: DataTypes.INTEGER,
-                allowNull: false
+                allowNull: true
+            },
+            grupoMuscularEtiqueta: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            dificultad: {
+                type: DataTypes.STRING,
+                allowNull: true
+            },
+            tiempoEstimado: {
+                type: DataTypes.INTEGER,
+                allowNull: true
             }
         },
         {

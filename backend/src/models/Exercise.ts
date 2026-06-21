@@ -11,25 +11,25 @@ export interface ExerciseAttributes {
     id: number;
     nombre: string;
     descripcion?: string | null;
-    grupoMuscular: string;
-    equipamiento?: string | null;
-    dificultad: ExerciseDifficulty;
+    userId?: number | null;
+    dificultad?: ExerciseDifficulty | null;
+    imagen?: string | null;
     createdAt?: Date;
     updatedAt?: Date;
 }
 
 type ExerciseCreationAttributes = Optional<
     ExerciseAttributes,
-    'id' | 'descripcion' | 'equipamiento' | 'dificultad' | 'createdAt' | 'updatedAt'
+    'id' | 'descripcion' | 'userId' | 'dificultad' | 'imagen' | 'createdAt' | 'updatedAt'
 >;
 
 export class Exercise extends Model<ExerciseAttributes, ExerciseCreationAttributes> implements ExerciseAttributes {
     public id!: number;
     public nombre!: string;
     public descripcion!: string | null;
-    public grupoMuscular!: string;
-    public equipamiento!: string | null;
-    public dificultad!: ExerciseDifficulty;
+    public userId!: number | null;
+    public dificultad!: ExerciseDifficulty | null;
+    public imagen!: string | null;
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -54,25 +54,20 @@ export function initExerciseModel(sequelize: Sequelize): typeof Exercise {
                 type: DataTypes.TEXT,
                 allowNull: true
             },
-            grupoMuscular: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    len: [2, 100]
-                }
-            },
-            equipamiento: {
-                type: DataTypes.STRING,
+            userId: {
+                type: DataTypes.INTEGER,
                 allowNull: true
             },
             dificultad: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                defaultValue: 'principiante',
+                allowNull: true,
                 validate: {
                     isIn: [['principiante', 'intermedio', 'avanzado']]
                 }
+            },
+            imagen: {
+                type: DataTypes.STRING,
+                allowNull: true
             }
         },
         {

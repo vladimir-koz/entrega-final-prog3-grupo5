@@ -6,10 +6,19 @@ import {
   listExercises,
   updateExercise
 } from '../services/exercise.service';
+import { AppError } from '../utils/AppError';
 
-export async function index(_req: Request, res: Response, next: NextFunction): Promise<void> {
+function getAuthenticatedUserId(req: Request): number {
+  if (!req.user) {
+    throw new AppError('Usuario no autenticado', 401);
+  }
+
+  return req.user.id;
+}
+
+export async function index(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await listExercises();
+    const result = await listExercises(getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -18,7 +27,7 @@ export async function index(_req: Request, res: Response, next: NextFunction): P
 
 export async function show(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await getExerciseById(Number(req.params.id));
+    const result = await getExerciseById(Number(req.params.id), getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -27,7 +36,7 @@ export async function show(req: Request, res: Response, next: NextFunction): Pro
 
 export async function store(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await createExercise(req.body);
+    const result = await createExercise(req.body, getAuthenticatedUserId(req));
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -36,7 +45,7 @@ export async function store(req: Request, res: Response, next: NextFunction): Pr
 
 export async function update(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await updateExercise(Number(req.params.id), req.body);
+    const result = await updateExercise(Number(req.params.id), req.body, getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -45,7 +54,7 @@ export async function update(req: Request, res: Response, next: NextFunction): P
 
 export async function destroy(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await deleteExercise(Number(req.params.id));
+    const result = await deleteExercise(Number(req.params.id), getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);

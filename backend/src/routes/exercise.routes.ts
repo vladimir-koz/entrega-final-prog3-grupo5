@@ -1,7 +1,10 @@
 import { Router } from 'express';
 import { destroy, index, show, store, update } from '../controllers/exercise.controller';
+import { verificarToken } from '../middlewares/auth.middleware';
 
 const router = Router();
+
+router.use(verificarToken);
 
 router.get('/', index);
 router.get('/:id', show);
