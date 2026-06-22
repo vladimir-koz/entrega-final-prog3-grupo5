@@ -1,6 +1,12 @@
-import { Exercise } from '../models';
 import { ExerciseRequestBody } from '../types/exercise.types';
 import { AppError } from '../utils/AppError';
+import {
+  createExercise as createExerciseRepo,
+  deleteExercise as deleteExerciseRepo,
+  findExerciseById,
+  findExercises,
+  updateExercise as updateExerciseRepo
+} from '../repositories/exercise.repository';
 
 const dificultadesValidas = ['principiante', 'intermedio', 'avanzado'];
 
@@ -19,18 +25,13 @@ function validarDatosExercise(data: ExerciseRequestBody, partial = false): void 
 }
 
 export async function listExercises(userId: number) {
-  const exercises = await Exercise.findAll({
-    where: { userId },
-    order: [['nombre', 'ASC']]
-  });
+  const exercises = await findExercises(userId);
 
   return { exercises };
 }
 
 export async function getExerciseById(id: number, userId: number) {
-  const exercise = await Exercise.findOne({
-    where: { id, userId }
-  });
+  const exercise = await findExerciseById(id, userId);
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);
@@ -42,7 +43,7 @@ export async function getExerciseById(id: number, userId: number) {
 export async function createExercise(data: ExerciseRequestBody, userId: number) {
   validarDatosExercise(data);
 
-  const exercise = await Exercise.create({
+  const exercise = await createExerciseRepo({
     nombre: data.nombre.trim(),
     descripcion: data.descripcion?.trim() || null,
     userId,
@@ -59,37 +60,33 @@ export async function createExercise(data: ExerciseRequestBody, userId: number) 
 export async function updateExercise(id: number, data: ExerciseRequestBody, userId: number) {
   validarDatosExercise(data, true);
 
-  const exercise = await Exercise.findOne({
-    where: { id, userId }
-  });
+  const exercise = await findExerciseById(id, userId);
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);
   }
 
-  await exercise.update({
-    nombre: data.nombre?.trim() ?? exercise.nombre,
-    descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : exercise.descripcion,
-    dificultad: data.dificultad !== undefined ? data.dificultad : exercise.dificultad,
-    imagen: data.imagen !== undefined ? data.imagen.trim() || null : exercise.imagen
-  });
+  const updatedExercise = await updateExerciseRepo(id, {
+    nombre: data.nombre?.trim(),
+    descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : undefined,
+    dificultad: data.dificultad !== undefined ? data.dificultad : undefined,
+    imagen: data.imagen !== undefined ? data.imagen.trim() || null : undefined
+  }, userId);
 
   return {
     message: 'Ejercicio actualizado exitosamente',
-    exercise
+    exercise: updatedExercise
   };
 }
 
 export async function deleteExercise(id: number, userId: number) {
-  const exercise = await Exercise.findOne({
-    where: { id, userId }
-  });
+  const exercise = await findExerciseById(id, userId);
 
   if (!exercise) {
     throw new AppError('Ejercicio no encontrado', 404);
   }
 
-  await exercise.destroy();
+  await deleteExerciseRepo(id, userId);
 
   return { message: 'Ejercicio eliminado exitosamente' };
 }
