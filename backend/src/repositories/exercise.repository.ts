@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Exercise } from '../models';
+import { Exercise, MuscleGroup } from '../models';
 import { ExerciseDifficulty } from '../models/Exercise';
 
 export interface ExerciseCreateData {
@@ -15,6 +15,13 @@ export async function findExercises(userId: number) {
     where: {
       [Op.or]: [{ userId: null }, { userId }]
     },
+    include: [
+      {
+        model: MuscleGroup,
+        as: 'muscleGroups',
+        through: { attributes: [] }
+      }
+    ],
     order: [['nombre', 'ASC']]
   });
 }
@@ -24,7 +31,14 @@ export async function findExerciseById(id: number, userId: number) {
     where: {
       id,
       [Op.or]: [{ userId: null }, { userId }]
-    }
+    },
+    include: [
+      {
+        model: MuscleGroup,
+        as: 'muscleGroups',
+        through: { attributes: [] }
+      }
+    ]
   });
 }
 

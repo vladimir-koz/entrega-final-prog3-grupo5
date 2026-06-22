@@ -62,6 +62,10 @@ export async function updateRoutine(id: number, data: RoutineRequestBody, userId
     throw new AppError('Rutina no encontrada', 404);
   }
 
+  if (routine.userId !== userId) {
+    throw new AppError('No se puede modificar una rutina global', 403);
+  }
+
   const updatedRoutine = await updateRoutineRepo(id, {
     nombre: data.nombre?.trim(),
     descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : undefined,
@@ -82,6 +86,10 @@ export async function deleteRoutine(id: number, userId: number) {
 
   if (!routine) {
     throw new AppError('Rutina no encontrada', 404);
+  }
+
+  if (routine.userId !== userId) {
+    throw new AppError('No se puede eliminar una rutina global', 403);
   }
 
   await deleteRoutineRepo(id, userId);

@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize';
 import databaseConfig from '../config/database';
 import { Exercise, initExerciseModel } from './Exercise';
+import { ExerciseMuscleGroup, initExerciseMuscleGroupModel } from './ExerciseMuscleGroup';
+import { initMuscleGroupModel, MuscleGroup } from './MuscleGroup';
 import { initRoutineModel, Routine } from './Routine';
 import { initRoutineSetModel, RoutineSet } from './RoutineSet';
 import { initUserModel, User } from './User';
@@ -30,6 +32,8 @@ export const sequelize = dbConfig.url
 
 initUserModel(sequelize);
 initExerciseModel(sequelize);
+initMuscleGroupModel(sequelize);
+initExerciseMuscleGroupModel(sequelize);
 initRoutineModel(sequelize);
 initRoutineSetModel(sequelize);
 
@@ -51,6 +55,50 @@ User.hasMany(Exercise, {
 Exercise.belongsTo(User, {
   foreignKey: 'userId',
   as: 'user'
+});
+
+User.hasMany(MuscleGroup, {
+  foreignKey: 'userId',
+  as: 'muscleGroups'
+});
+
+MuscleGroup.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'user'
+});
+
+Exercise.belongsToMany(MuscleGroup, {
+  through: ExerciseMuscleGroup,
+  foreignKey: 'exerciseId',
+  otherKey: 'muscleGroupId',
+  as: 'muscleGroups'
+});
+
+MuscleGroup.belongsToMany(Exercise, {
+  through: ExerciseMuscleGroup,
+  foreignKey: 'muscleGroupId',
+  otherKey: 'exerciseId',
+  as: 'exercises'
+});
+
+Exercise.hasMany(ExerciseMuscleGroup, {
+  foreignKey: 'exerciseId',
+  as: 'exerciseMuscleGroups'
+});
+
+ExerciseMuscleGroup.belongsTo(Exercise, {
+  foreignKey: 'exerciseId',
+  as: 'exercise'
+});
+
+MuscleGroup.hasMany(ExerciseMuscleGroup, {
+  foreignKey: 'muscleGroupId',
+  as: 'exerciseMuscleGroups'
+});
+
+ExerciseMuscleGroup.belongsTo(MuscleGroup, {
+  foreignKey: 'muscleGroupId',
+  as: 'muscleGroup'
 });
 
 Routine.hasMany(RoutineSet, {
@@ -75,6 +123,8 @@ RoutineSet.belongsTo(Exercise, {
 
 export {
   Exercise,
+  ExerciseMuscleGroup,
+  MuscleGroup,
   Routine,
   RoutineSet,
   Sequelize,

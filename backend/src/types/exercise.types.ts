@@ -5,4 +5,5 @@ export interface ExerciseRequestBody {
   descripcion?: string;
   dificultad?: ExerciseDifficulty;
   imagen?: string;
+  muscleGroupIds?: number[];
 }
