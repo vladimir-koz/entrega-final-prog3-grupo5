@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import databaseConfig from '../config/database';
 import { Exercise, initExerciseModel } from './Exercise';
 import { initRoutineModel, Routine } from './Routine';
+import { initRoutineSetModel, RoutineSet } from './RoutineSet';
 import { initUserModel, User } from './User';
 
 type Environment = 'development' | 'test' | 'production';
@@ -30,6 +31,7 @@ export const sequelize = dbConfig.url
 initUserModel(sequelize);
 initExerciseModel(sequelize);
 initRoutineModel(sequelize);
+initRoutineSetModel(sequelize);
 
 User.hasMany(Routine, {
   foreignKey: 'userId',
@@ -51,9 +53,30 @@ Exercise.belongsTo(User, {
   as: 'user'
 });
 
+Routine.hasMany(RoutineSet, {
+  foreignKey: 'routineId',
+  as: 'routineSets'
+});
+
+RoutineSet.belongsTo(Routine, {
+  foreignKey: 'routineId',
+  as: 'routine'
+});
+
+Exercise.hasMany(RoutineSet, {
+  foreignKey: 'exerciseId',
+  as: 'routineSets'
+});
+
+RoutineSet.belongsTo(Exercise, {
+  foreignKey: 'exerciseId',
+  as: 'exercise'
+});
+
 export {
   Exercise,
   Routine,
+  RoutineSet,
   Sequelize,
   User
 };

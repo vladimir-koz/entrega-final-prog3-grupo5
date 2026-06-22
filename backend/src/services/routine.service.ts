@@ -1,6 +1,12 @@
-import { Routine } from '../models';
 import { RoutineRequestBody } from '../types/routine.types';
 import { AppError } from '../utils/AppError';
+import {
+  createRoutine as createRoutineRepo,
+  deleteRoutine as deleteRoutineRepo,
+  findRoutineById,
+  findRoutines,
+  updateRoutine as updateRoutineRepo
+} from '../repositories/routine.repository';
 
 function validarDatosRoutine(data: RoutineRequestBody, partial = false): void {
   if (!partial && !data.nombre) {
@@ -13,18 +19,13 @@ function validarDatosRoutine(data: RoutineRequestBody, partial = false): void {
 }
 
 export async function listRoutines(userId: number) {
-  const routines = await Routine.findAll({
-    where: { userId },
-    order: [['createdAt', 'DESC']]
-  });
+  const routines = await findRoutines(userId);
 
   return { routines };
 }
 
 export async function getRoutineById(id: number, userId: number) {
-  const routine = await Routine.findOne({
-    where: { id, userId }
-  });
+  const routine = await findRoutineById(id, userId);
 
   if (!routine) {
     throw new AppError('Rutina no encontrada', 404);
@@ -36,7 +37,7 @@ export async function getRoutineById(id: number, userId: number) {
 export async function createRoutine(data: RoutineRequestBody, userId: number) {
   validarDatosRoutine(data);
 
-  const routine = await Routine.create({
+  const routine = await createRoutineRepo({
     nombre: data.nombre.trim(),
     descripcion: data.descripcion?.trim() || null,
     tipo: data.tipo?.trim() || null,
@@ -55,39 +56,35 @@ export async function createRoutine(data: RoutineRequestBody, userId: number) {
 export async function updateRoutine(id: number, data: RoutineRequestBody, userId: number) {
   validarDatosRoutine(data, true);
 
-  const routine = await Routine.findOne({
-    where: { id, userId }
-  });
+  const routine = await findRoutineById(id, userId);
 
   if (!routine) {
     throw new AppError('Rutina no encontrada', 404);
   }
 
-  await routine.update({
-    nombre: data.nombre?.trim() ?? routine.nombre,
-    descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : routine.descripcion,
-    tipo: data.tipo !== undefined ? data.tipo.trim() || null : routine.tipo,
-    grupoMuscularEtiqueta: data.grupoMuscularEtiqueta !== undefined ? data.grupoMuscularEtiqueta.trim() || null : routine.grupoMuscularEtiqueta,
-    dificultad: data.dificultad !== undefined ? data.dificultad.trim() || null : routine.dificultad,
-    tiempoEstimado: data.tiempoEstimado !== undefined ? data.tiempoEstimado : routine.tiempoEstimado
-  });
+  const updatedRoutine = await updateRoutineRepo(id, {
+    nombre: data.nombre?.trim(),
+    descripcion: data.descripcion !== undefined ? data.descripcion.trim() || null : undefined,
+    tipo: data.tipo !== undefined ? data.tipo.trim() || null : undefined,
+    grupoMuscularEtiqueta: data.grupoMuscularEtiqueta !== undefined ? data.grupoMuscularEtiqueta.trim() || null : undefined,
+    dificultad: data.dificultad !== undefined ? data.dificultad.trim() || null : undefined,
+    tiempoEstimado: data.tiempoEstimado !== undefined ? data.tiempoEstimado : undefined
+  }, userId);
 
   return {
     message: 'Rutina actualizada exitosamente',
-    routine
+    routine: updatedRoutine
   };
 }
 
 export async function deleteRoutine(id: number, userId: number) {
-  const routine = await Routine.findOne({
-    where: { id, userId }
-  });
+  const routine = await findRoutineById(id, userId);
 
   if (!routine) {
     throw new AppError('Rutina no encontrada', 404);
   }
 
-  await routine.destroy();
+  await deleteRoutineRepo(id, userId);
 
   return { message: 'Rutina eliminada exitosamente' };
 }
