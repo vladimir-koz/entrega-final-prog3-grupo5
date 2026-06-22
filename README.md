@@ -262,7 +262,7 @@ Cambios realizados
 En esta etapa se trabajó sobre el backend del proyecto, incorporando dos módulos principales: ejercicios y rutinas.
 La idea fue empezar a estructurar la lógica necesaria para que la aplicación pueda manejar un catálogo de ejercicios y, a la vez, permitir que cada usuario cree y administre sus propias rutinas.
 
-Módulo de ejercicios
+## Módulo de ejercicios
 
 Se agregó el módulo de ejercicios para administrar el catálogo de ejercicios disponibles dentro de la aplicación.
 
@@ -271,6 +271,7 @@ Este módulo permite realizar las operaciones básicas de un CRUD: listar, obten
 Para esto se incorporó:
 
 Modelo Sequelize Exercise.
+
 Migración para crear la tabla exercises.
 Service con la lógica principal del CRUD.
 Controller para manejar las respuestas HTTP.
@@ -292,7 +293,39 @@ Ejemplo de body para crear un ejercicio
   "dificultad": "intermedio",
   "imagen": "sentadilla.jpg"
 }
-Módulo de rutinas
+
+
+## Módulo de entrenamientos
+Modelo Sequelize Workouts.
+
+Migración para crear la tabla workouts.
+Service con la lógica principal del CRUD.
+Controller para manejar las respuestas HTTP.
+Rutas REST bajo /api/workouts.
+Tipos TypeScript para los requests.
+Registro del modelo en Sequelize.
+Registro de las rutas en el router principal.
+Asociacion de ejercicios al usuario autenticado mediante userId.
+Endpoints disponibles
+GET /api/workouts
+GET /api/workouts/:id
+POST /api/workouts
+PUT /api/workouts/:id
+DELETE /api/workouts/:id
+Ejemplo de body para crear un workout
+
+{
+  "nombre": "Entrenamiento Lunes 22";
+  "series": [
+      {
+        "repeticiones": 12;
+        "peso": 20;
+        "exerciseId": 5;
+      }
+  ]
+}
+
+## Módulo de rutinas
 
 También se agregó el módulo de rutinas, pensado para que cada usuario pueda crear y administrar sus propias rutinas de entrenamiento.
 
@@ -301,6 +334,7 @@ A diferencia del módulo de ejercicios, estas rutas están protegidas y requiere
 Para este módulo se incorporó:
 
 Modelo Sequelize Routine.
+
 Migración para crear la tabla routines.
 Relación User hasMany Routine.
 Relación Routine belongsTo User.
@@ -318,6 +352,8 @@ PUT /api/routines/:id
 DELETE /api/routines/:id
 Autenticación requerida
 
+
+## Autorización
 Para utilizar estas rutas es necesario enviar el token JWT en el header de la request:
 
 Authorization: Bearer TOKEN

@@ -3,6 +3,7 @@ import authRoutes from './auth.routes';
 import exerciseRoutes from './exercise.routes';
 import routineRoutes from './routine.routes';
 import routineSetRoutes from './routineSet.routes';
+import workoutRoutes from './workout.routes';
 
 const router = Router();
 
@@ -19,5 +20,7 @@ router.use('/auth', authRoutes);
 router.use('/exercises', exerciseRoutes);
 router.use('/routines', routineRoutes);
 router.use('/routine-sets', routineSetRoutes);
+router.use('/workouts', workoutRoutes);
+
 
 export default router;
