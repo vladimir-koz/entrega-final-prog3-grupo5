@@ -443,6 +443,9 @@ Implementado:
 - entrenamientos
 - series reales de entrenamiento
 
+##Documentacion postman: 
+https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
+
 Pendiente:
 
 - tests de integracion
