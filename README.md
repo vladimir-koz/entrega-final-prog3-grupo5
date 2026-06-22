@@ -1,5 +1,6 @@
 # segundo-parcial-prog3-grupo5
-Monorepo para la aplicacion fullstack para el segundo parcial de programación 3 
+
+Monorepo para la aplicacion fullstack para el segundo parcial de programación 3
 
 # Segundo Parcial Programacion 3 - Grupo 5
 
@@ -14,10 +15,18 @@ Aplicacion fullstack para gestion de entrenamientos, rutinas, ejercicios y grupo
 
 El backend expone endpoints para autenticacion, usuarios y posteriormente el dominio de entrenamientos.
 
+### Cambios recientes
+
+- Se agregó la entidad `RoutineSet` junto con su migración y modelo Sequelize.
+- Se creó la tabla `routine_sets` en la base de datos.
+- Se agregó el patrón de repositorio para ejercicios y rutinas (`exercise.repository.ts`, `routine.repository.ts`).
+- Se agregó la capa de `RoutineSet` con repositorio, servicio, controlador y rutas.
+- Se añadió el endpoint protegido `/api/routine-sets`.
+- La autenticación JWT ya existente se dejó intacta.
 
 ## Estructura principal
 
-```txt
+````txt
 backend/
 ├── src/
 │   ├── app.ts
@@ -66,7 +75,7 @@ DB_PASSWORD=app_password
 
 JWT_SECRET=clave_larga_para_firmar_tokens
 CORS_ORIGIN=http://localhost:3000
-```
+````
 
 En produccion, por ejemplo Render, se usa:
 
@@ -244,7 +253,6 @@ Este backend deja lista la base inicial para que el equipo continue trabajando s
 - Tests de integracion.
 - Consumo desde frontend React.
 
-
 Integrantes y contribuciones
 
 Vladimir Kozik (rama: alumno1_kozik)
@@ -287,10 +295,10 @@ PUT /api/exercises/:id
 DELETE /api/exercises/:id
 Ejemplo de body para crear un ejercicio
 {
-  "nombre": "Sentadilla",
-  "descripcion": "Ejercicio basico de piernas",
-  "dificultad": "intermedio",
-  "imagen": "sentadilla.jpg"
+"nombre": "Sentadilla",
+"descripcion": "Ejercicio basico de piernas",
+"dificultad": "intermedio",
+"imagen": "sentadilla.jpg"
 }
 Módulo de rutinas
 
@@ -323,12 +331,12 @@ Para utilizar estas rutas es necesario enviar el token JWT en el header de la re
 Authorization: Bearer TOKEN
 Ejemplo de body para crear una rutina
 {
-  "nombre": "Rutina fuerza",
-  "descripcion": "Rutina de tren inferior",
-  "tipo": "Fuerza",
-  "grupoMuscularEtiqueta": "Piernas",
-  "dificultad": "intermedio",
-  "tiempoEstimado": 60
+"nombre": "Rutina fuerza",
+"descripcion": "Rutina de tren inferior",
+"tipo": "Fuerza",
+"grupoMuscularEtiqueta": "Piernas",
+"dificultad": "intermedio",
+"tiempoEstimado": 60
 }
 Verificación
 
