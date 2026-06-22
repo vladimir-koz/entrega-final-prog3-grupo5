@@ -23,6 +23,7 @@ El foco actual del proyecto es el backend: una API REST con Express, TypeScript,
 │   │   └── utils/
 │   ├── config/
 │   ├── migrations/
+│   ├── seeders/
 │   ├── Dockerfile
 │   ├── Dockerfile.dev
 │   ├── package.json
@@ -102,14 +103,32 @@ npm run migrate
 Ejecuta las migraciones de Sequelize.
 
 ```bash
+npm run seed
+```
+
+Carga datos iniciales con los seeders.
+
+```bash
 npm run start:migrate
 ```
 
 Ejecuta migraciones y luego inicia el servidor. Se usa para Render cuando no hay acceso a shell en el plan gratuito.
 
+```bash
+npm run start:migrate:seed
+```
+
+Ejecuta migraciones, seeders y luego inicia el servidor. Es el comando usado por el `Dockerfile` de produccion.
+
 ## Base de Datos
 
 El backend usa migraciones de Sequelize para crear y actualizar el esquema de PostgreSQL.
+
+Actualmente el esquema inicial esta consolidado en una unica migracion:
+
+```txt
+backend/migrations/20260622000000-create-training-schema.js
+```
 
 Tablas actuales:
 
@@ -121,6 +140,31 @@ Tablas actuales:
 - `exercise_muscle_groups`
 - `workouts`
 - `workout_sets`
+
+Los datos iniciales se cargan con seeders:
+
+```txt
+backend/seeders/20260622010000-seed-muscle-groups.js
+backend/seeders/20260622020000-seed-exercises.js
+backend/seeders/20260622030000-seed-routines.js
+```
+
+Datos precargados:
+
+- 10 grupos musculares globales
+- 12 ejercicios globales
+- relaciones entre ejercicios y grupos musculares
+- 3 rutinas globales
+- 12 series planificadas de rutina
+
+Para reiniciar la base local desde cero con Docker:
+
+```bash
+docker compose down -v
+docker compose up -d --build
+docker compose exec backend npm run migrate
+docker compose exec backend npm run seed
+```
 
 ## Autenticacion
 
@@ -361,6 +405,26 @@ Health Check Path: /api/health
 PostgreSQL en Render debe crearse como un servicio separado.
 
 Usar la URL interna de la base como `DATABASE_URL` en el servicio backend.
+
+Variables necesarias en Render:
+
+```env
+NODE_ENV=production
+DATABASE_URL=postgresql://...
+DB_SSL=true
+JWT_SECRET=clave_larga_segura
+CORS_ORIGIN=https://url-del-frontend
+```
+
+El `Dockerfile` ejecuta:
+
+```bash
+npm run start:migrate:seed
+```
+
+Por eso, al desplegar en Render, primero corre las migraciones, despues carga los seeders y finalmente inicia la API.
+
+Si la base de Render ya tenia migraciones anteriores, hay que resetearla o recrearla antes de desplegar esta version, porque ahora el esquema inicial esta consolidado en una sola migracion.
 
 ## Estado Actual del Desarrollo
 
