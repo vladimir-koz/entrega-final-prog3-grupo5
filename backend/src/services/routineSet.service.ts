@@ -76,7 +76,7 @@ async function ensureRoutineSetVisible(id: number, userId: number) {
   const routineSet = await findRoutineSetById(id);
 
   if (!routineSet) {
-    throw new AppError('Routine set no encontrado', 404);
+    throw new AppError('Serie de rutina no encontrada', 404);
   }
 
   await ensureRoutineVisible(routineSet.routineId, userId);
@@ -88,7 +88,7 @@ async function ensureRoutineSetOwned(id: number, userId: number) {
   const routineSet = await findRoutineSetById(id);
 
   if (!routineSet) {
-    throw new AppError('Routine set no encontrado', 404);
+    throw new AppError('Serie de rutina no encontrada', 404);
   }
 
   await ensureRoutineOwned(routineSet.routineId, userId);
@@ -124,7 +124,7 @@ export async function createRoutineSetService(data: RoutineSetRequestBody, userI
   });
 
   return {
-    message: 'Routine set creado exitosamente',
+    message: 'Serie de rutina creada exitosamente',
     routineSet
   };
 }
@@ -150,11 +150,11 @@ export async function updateRoutineSetService(id: number, data: RoutineSetReques
   });
 
   if (!routineSet) {
-    throw new AppError('Routine set no encontrado', 404);
+    throw new AppError('Serie de rutina no encontrada', 404);
   }
 
   return {
-    message: 'Routine set actualizado exitosamente',
+    message: 'Serie de rutina actualizada exitosamente',
     routineSet
   };
 }
@@ -163,5 +163,5 @@ export async function deleteRoutineSetService(id: number, userId: number) {
   await ensureRoutineSetOwned(id, userId);
   await deleteRoutineSet(id);
 
-  return { message: 'Routine set eliminado exitosamente' };
+  return { message: 'Serie de rutina eliminada exitosamente' };
 }

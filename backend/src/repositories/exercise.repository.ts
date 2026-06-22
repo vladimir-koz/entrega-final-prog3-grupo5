@@ -10,6 +10,13 @@ export interface ExerciseCreateData {
   userId?: number | null;
 }
 
+const visibleExerciseWhere = (userId: number) => ({
+  [Op.or]: [
+    { userId: null },
+    { userId }
+  ]
+});
+
 export async function findExercises(userId: number) {
   return Exercise.findAll({
     where: {
@@ -54,6 +61,17 @@ export async function updateExercise(id: number, data: Partial<ExerciseCreateDat
   }
 
   return exercise.update(data);
+}
+
+export function countExercisesByIdsForUser(userId: number, ids: number[]): Promise<number> {
+  return Exercise.count({
+    where: {
+      id: {
+        [Op.in]: ids
+      },
+      ...visibleExerciseWhere(userId)
+    }
+  });
 }
 
 export async function deleteExercise(id: number, userId: number) {

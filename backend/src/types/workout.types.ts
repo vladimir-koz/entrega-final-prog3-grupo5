@@ -1,0 +1,19 @@
+export interface WorkoutSetInput {
+  repeticiones: number;
+  peso: number;
+  exerciseId: number;
+}
+
+export interface CreateWorkoutBody {
+  timestamp?: string;
+  nombre: string;
+  grupoMuscularEtiqueta?: string;
+  series?: WorkoutSetInput[];
+}
+
+export interface UpdateWorkoutBody {
+  timestamp?: string;
+  nombre?: string;
+  grupoMuscularEtiqueta?: string;
+  series?: WorkoutSetInput[];
+}

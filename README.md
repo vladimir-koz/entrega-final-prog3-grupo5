@@ -119,9 +119,6 @@ Tablas actuales:
 - `routine_sets`
 - `muscle_groups`
 - `exercise_muscle_groups`
-
-Tablas pendientes:
-
 - `workouts`
 - `workout_sets`
 
@@ -298,6 +295,35 @@ Body para crear:
 
 `RoutineSet` representa el trabajo planificado dentro de una rutina.
 
+### Workouts
+
+```http
+GET    /api/workouts
+GET    /api/workouts/:id
+POST   /api/workouts
+PUT    /api/workouts/:id
+DELETE /api/workouts/:id
+```
+
+Body para crear:
+
+```json
+{
+  "nombre": "Entrenamiento lunes",
+  "timestamp": "2026-06-22T12:00:00.000Z",
+  "grupoMuscularEtiqueta": "Piernas",
+  "series": [
+    {
+      "exerciseId": 1,
+      "repeticiones": 12,
+      "peso": 40
+    }
+  ]
+}
+```
+
+`Workout` representa un entrenamiento realizado. `WorkoutSet` representa las series reales registradas dentro de ese entrenamiento.
+
 ## Modelo de Dominio
 
 Modelo implementado actualmente:
@@ -309,20 +335,15 @@ User 1 --- N MuscleGroup
 Routine 1 --- N RoutineSet
 Exercise 1 --- N RoutineSet
 Exercise N --- N MuscleGroup
+User 1 --- N Workout
+Workout 1 --- N WorkoutSet
+Exercise 1 --- N WorkoutSet
 ```
 
 La relacion `Exercise N --- N MuscleGroup` se implementa con:
 
 ```txt
 exercise_muscle_groups
-```
-
-Pendiente:
-
-```txt
-User 1 --- N Workout
-Workout 1 --- N WorkoutSet
-Exercise 1 --- N WorkoutSet
 ```
 
 ## Deploy en Render
@@ -355,11 +376,11 @@ Implementado:
 - series planificadas de rutina
 - grupos musculares
 - relacion ejercicio-grupo muscular
+- entrenamientos
+- series reales de entrenamiento
 
 Pendiente:
 
-- entrenamientos
-- series reales de entrenamiento
 - tests de integracion
 - coleccion de Postman
 - integracion con frontend

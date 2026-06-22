@@ -10,11 +10,11 @@ import {
 
 function validateMuscleGroupData(data: MuscleGroupRequestBody, partial = false): void {
   if (!partial && !data.nombre) {
-    throw new AppError('Muscle group name is required', 400);
+    throw new AppError('El nombre del grupo muscular es obligatorio', 400);
   }
 
   if (data.nombre !== undefined && data.nombre.trim().length < 2) {
-    throw new AppError('Muscle group name must have at least 2 characters', 400);
+    throw new AppError('El nombre del grupo muscular debe tener al menos 2 caracteres', 400);
   }
 }
 
@@ -28,7 +28,7 @@ export async function getMuscleGroupById(id: number, userId: number) {
   const muscleGroup = await findMuscleGroupById(id, userId);
 
   if (!muscleGroup) {
-    throw new AppError('Muscle group not found', 404);
+    throw new AppError('Grupo muscular no encontrado', 404);
   }
 
   return { muscleGroup };
@@ -43,7 +43,7 @@ export async function createMuscleGroup(data: MuscleGroupRequestBody, userId: nu
   });
 
   return {
-    message: 'Muscle group created successfully',
+    message: 'Grupo muscular creado exitosamente',
     muscleGroup
   };
 }
@@ -54,11 +54,11 @@ export async function updateMuscleGroup(id: number, data: MuscleGroupRequestBody
   const muscleGroup = await findMuscleGroupById(id, userId);
 
   if (!muscleGroup) {
-    throw new AppError('Muscle group not found', 404);
+    throw new AppError('Grupo muscular no encontrado', 404);
   }
 
   if (muscleGroup.userId !== userId) {
-    throw new AppError('Global muscle groups cannot be modified', 403);
+    throw new AppError('No se puede modificar un grupo muscular global', 403);
   }
 
   const updatedMuscleGroup = await updateMuscleGroupRepo(id, {
@@ -66,7 +66,7 @@ export async function updateMuscleGroup(id: number, data: MuscleGroupRequestBody
   }, userId);
 
   return {
-    message: 'Muscle group updated successfully',
+    message: 'Grupo muscular actualizado exitosamente',
     muscleGroup: updatedMuscleGroup
   };
 }
@@ -75,14 +75,14 @@ export async function deleteMuscleGroup(id: number, userId: number) {
   const muscleGroup = await findMuscleGroupById(id, userId);
 
   if (!muscleGroup) {
-    throw new AppError('Muscle group not found', 404);
+    throw new AppError('Grupo muscular no encontrado', 404);
   }
 
   if (muscleGroup.userId !== userId) {
-    throw new AppError('Global muscle groups cannot be deleted', 403);
+    throw new AppError('No se puede eliminar un grupo muscular global', 403);
   }
 
   await deleteMuscleGroupRepo(id, userId);
 
-  return { message: 'Muscle group deleted successfully' };
+  return { message: 'Grupo muscular eliminado exitosamente' };
 }

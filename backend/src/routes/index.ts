@@ -4,6 +4,7 @@ import exerciseRoutes from './exercise.routes';
 import muscleGroupRoutes from './muscleGroup.routes';
 import routineRoutes from './routine.routes';
 import routineSetRoutes from './routineSet.routes';
+import workoutRoutes from './workout.routes';
 
 const router = Router();
 
@@ -21,5 +22,7 @@ router.use('/exercises', exerciseRoutes);
 router.use('/muscle-groups', muscleGroupRoutes);
 router.use('/routines', routineRoutes);
 router.use('/routine-sets', routineSetRoutes);
+router.use('/workouts', workoutRoutes);
+
 
 export default router;

@@ -21,7 +21,7 @@ export async function index(req: Request, res: Response, next: NextFunction): Pr
     const routineId = Number(req.query.routineId);
 
     if (!routineId) {
-      res.status(400).json({ error: 'routineId es requerido como query param' });
+      res.status(400).json({ error: 'El query param routineId es obligatorio' });
       return;
     }
 

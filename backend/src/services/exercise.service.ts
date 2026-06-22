@@ -45,7 +45,7 @@ async function validateMuscleGroupsVisible(muscleGroupIds: number[] | undefined,
     const muscleGroup = await findMuscleGroupById(muscleGroupId, userId);
 
     if (!muscleGroup) {
-      throw new AppError(`Muscle group ${muscleGroupId} not found`, 400);
+      throw new AppError(`Grupo muscular ${muscleGroupId} no encontrado`, 400);
     }
   }
 }

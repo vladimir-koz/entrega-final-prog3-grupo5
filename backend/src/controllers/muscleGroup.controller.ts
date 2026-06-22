@@ -10,7 +10,7 @@ import { AppError } from '../utils/AppError';
 
 function getAuthenticatedUserId(req: Request): number {
   if (!req.user) {
-    throw new AppError('User is not authenticated', 401);
+    throw new AppError('Usuario no autenticado', 401);
   }
 
   return req.user.id;
