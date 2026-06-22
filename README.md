@@ -243,3 +243,100 @@ Este backend deja lista la base inicial para que el equipo continue trabajando s
 - Series.
 - Tests de integracion.
 - Consumo desde frontend React.
+
+
+Integrantes y contribuciones
+
+Vladimir Kozik (rama: alumno1_kozik)
+
+Conrado Lanusse (rama: alumno2_lanusse)
+
+Laureano Kronemberger (rama: alumno3_kronemberger)
+
+Santino Aloisio (rama: alumno4_aloisio)
+
+Francisco Jaszczuk (rama: alumno5_jaszczuk)
+
+Cambios realizados
+
+En esta etapa se trabajó sobre el backend del proyecto, incorporando dos módulos principales: ejercicios y rutinas.
+La idea fue empezar a estructurar la lógica necesaria para que la aplicación pueda manejar un catálogo de ejercicios y, a la vez, permitir que cada usuario cree y administre sus propias rutinas.
+
+Módulo de ejercicios
+
+Se agregó el módulo de ejercicios para administrar el catálogo de ejercicios disponibles dentro de la aplicación.
+
+Este módulo permite realizar las operaciones básicas de un CRUD: listar, obtener por id, crear, editar y eliminar ejercicios.
+
+Para esto se incorporó:
+
+Modelo Sequelize Exercise.
+Migración para crear la tabla exercises.
+Service con la lógica principal del CRUD.
+Controller para manejar las respuestas HTTP.
+Rutas REST bajo /api/exercises.
+Tipos TypeScript para los requests.
+Registro del modelo en Sequelize.
+Registro de las rutas en el router principal.
+Asociacion de ejercicios al usuario autenticado mediante userId.
+Endpoints disponibles
+GET /api/exercises
+GET /api/exercises/:id
+POST /api/exercises
+PUT /api/exercises/:id
+DELETE /api/exercises/:id
+Ejemplo de body para crear un ejercicio
+{
+  "nombre": "Sentadilla",
+  "descripcion": "Ejercicio basico de piernas",
+  "dificultad": "intermedio",
+  "imagen": "sentadilla.jpg"
+}
+Módulo de rutinas
+
+También se agregó el módulo de rutinas, pensado para que cada usuario pueda crear y administrar sus propias rutinas de entrenamiento.
+
+A diferencia del módulo de ejercicios, estas rutas están protegidas y requieren autenticación mediante token JWT. Esto permite asociar cada rutina al usuario correspondiente.
+
+Para este módulo se incorporó:
+
+Modelo Sequelize Routine.
+Migración para crear la tabla routines.
+Relación User hasMany Routine.
+Relación Routine belongsTo User.
+Service con la lógica principal del CRUD.
+Controller para manejar las respuestas HTTP.
+Rutas REST protegidas bajo /api/routines.
+Tipos TypeScript para los requests.
+Registro del modelo en Sequelize.
+Registro de las rutas en el router principal.
+Endpoints disponibles
+GET /api/routines
+GET /api/routines/:id
+POST /api/routines
+PUT /api/routines/:id
+DELETE /api/routines/:id
+Autenticación requerida
+
+Para utilizar estas rutas es necesario enviar el token JWT en el header de la request:
+
+Authorization: Bearer TOKEN
+Ejemplo de body para crear una rutina
+{
+  "nombre": "Rutina fuerza",
+  "descripcion": "Rutina de tren inferior",
+  "tipo": "Fuerza",
+  "grupoMuscularEtiqueta": "Piernas",
+  "dificultad": "intermedio",
+  "tiempoEstimado": 60
+}
+Verificación
+
+Se verificó que el backend compile correctamente y que las migraciones se ejecuten dentro del entorno Docker.
+
+Comandos utilizados:
+
+docker compose exec backend npm run build
+docker compose exec backend npm run migrate
+
+Además, se probaron los endpoints principales utilizando Invoke-RestMethod para comprobar que las rutas respondan correctamente y que el flujo básico de creación, consulta, edición y eliminación funcione como se esperaba
