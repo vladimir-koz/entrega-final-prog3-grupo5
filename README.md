@@ -267,6 +267,7 @@ Módulo de ejercicios
 Se agregó el módulo de ejercicios para administrar el catálogo de ejercicios disponibles dentro de la aplicación.
 
 Este módulo permite realizar las operaciones básicas de un CRUD: listar, obtener por id, crear, editar y eliminar ejercicios.
+Permite obtener ejercicios precargados y ejercicios creados por el usuario. Para esto discrimina aquellos que no tengan id de usuario.
 
 Para esto se incorporó:
 
