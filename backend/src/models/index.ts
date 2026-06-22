@@ -78,5 +78,5 @@ export {
   Routine,
   RoutineSet,
   Sequelize,
-  User
+  User,
 };
