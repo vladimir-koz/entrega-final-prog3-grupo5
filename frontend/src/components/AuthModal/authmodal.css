@@ -1,0 +1,191 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.modal {
+    width: 420px;
+    background: #171717;
+    border: 1px solid #2f2f2f;
+    border-radius: 14px;
+
+    padding: 35px;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    box-shadow: 0 0 40px rgba(255, 0, 0, .18);
+}
+
+.modal h2{
+
+    text-align:center;
+    color:white;
+    font-size:32px;
+    letter-spacing:1px;
+
+}
+
+.close-btn {
+    position: absolute;
+
+    top: 18px;
+    right: 18px;
+
+    background: transparent;
+    border: none;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 20px;
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tabs button {
+
+    flex: 1;
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #292929;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.tabs button:hover{
+    background:#383838;
+}
+
+.tabs .active{
+
+    background:#d60000;
+
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal input {
+    padding: 14px;
+
+    border-radius: 8px;
+
+    border: 1px solid #444;
+
+    background: #232323;
+
+    color: white;
+
+    outline: none;
+}
+
+.modal input:focus {
+    border-color: #d40000;
+}
+
+.login-btn {
+    margin-top: 10px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #d40000;
+
+    color: white;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.login-btn:hover {
+    background: #ff1a1a;
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.modal input {
+    height: 48px;
+    padding: 0 15px;
+
+    border: 1px solid #3b3b3b;
+    border-radius: 8px;
+
+    background: #242424;
+    color: white;
+
+    font-size: 15px;
+
+    transition: .25s;
+}
+
+.modal input::placeholder {
+    color: #888;
+}
+
+.modal input:focus {
+    border-color: #d60000;
+    box-shadow: 0 0 10px rgba(214,0,0,.25);
+}
+
+.login-btn {
+    margin-top: 10px;
+
+    height: 48px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #d60000;
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.login-btn:hover {
+    background: #f00000;
+}

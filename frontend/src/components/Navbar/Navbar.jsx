@@ -1,16 +1,30 @@
 import "./Navbar.css";
+import { useState } from "react";
+import AuthModal from "../AuthModal/AuthModal";
 
 function Navbar() {
+
+  const [openModal, setOpenModal] = useState(false);
+
   return (
-    <header className="navbar">
+    <>
+      <header className="navbar">
 
-      <h2>PowerUp</h2>
+        <h2>PowerUp</h2>
 
-      <button>
-        Iniciar sesión
-      </button>
+        <button
+          onClick={() => setOpenModal(true)}
+        >
+          Iniciar sesión
+        </button>
 
-    </header>
+      </header>
+
+      <AuthModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      />
+    </>
   );
 }
 
