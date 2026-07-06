@@ -443,7 +443,7 @@ Implementado:
 - entrenamientos
 - series reales de entrenamiento
 
-##Documentacion postman: 
+##Documentacion postman:
 https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
 
 Pendiente:
@@ -452,6 +452,91 @@ Pendiente:
 - coleccion de Postman
 - integracion con frontend
 
+## Tecnologías utilizadas
+
+### Frontend
+
+- React
+- Vite
+- React Router DOM
+- CSS3
+
+---
+
+## Funcionalidades implementadas
+
+### Dashboard
+
+- Navbar y Sidebar reutilizables.
+- Hero Banner con diseño fitness.
+- Tarjetas de estadísticas.
+- Navegación entre páginas mediante React Router.
+
+### Gestión de Rutinas
+
+- Vista "Mis rutinas".
+- Tabla de rutinas.
+- Estructura preparada para integración con el backend mediante Fetch API.
+
+---
+
+## Estructura del Frontend
+
+```txt
+src/
+│
+├── assets/
+│   └── images/
+│
+├── components/
+│   ├── HeroBanner/
+│   ├── Layout/
+│   ├── Navbar/
+│   ├── Sidebar/
+│   ├── StatsCards/
+│   └── WeeklyActivity/
+│
+├── pages/
+│   ├── Dashboard.jsx
+│   ├── Rutinas.jsx
+│   ├── Progreso.jsx
+│   └── Actividad.jsx
+│
+├── styles/
+│   ├── global.css
+│   └── rutinas.css
+│
+├── App.jsx
+└── main.jsx
+
+
+## Avances del Frontend
+
+### Interfaz
+
+- Se migró el frontend a React utilizando Vite.
+- Se implementó React Router para la navegación entre las distintas vistas.
+- Se desarrolló el Dashboard principal con diseño inicial.
+- Se creó la vista "Mis Rutinas" con una tabla preparada para mostrar datos dinámicos.
+- Se reorganizó la estructura del frontend siguiendo una arquitectura basada en componentes reutilizables.
+
+### Autenticación
+
+- Se implementó el botón "Iniciar sesión" en el Navbar.
+- Se desarrolló un modal reutilizable para autenticación.
+- Se separó la lógica del modal en componentes independientes:
+  - AuthModal
+  - LoginForm
+  - RegisterForm
+- Se dejó preparada la estructura para integrar la autenticación mediante JWT con el backend.
+
+### Próximos pasos
+
+- Conectar Login y Registro con la API.
+- Implementar almacenamiento del JWT.
+- Consumir las rutas protegidas del backend.
+- Integrar la gestión de rutinas mediante Fetch API.
+
 ## Integrantes
 
 - Vladimir Kozik (`alumno1_kozik`)
@@ -459,3 +544,4 @@ Pendiente:
 - Laureano Kronemberger (`alumno3_kronemberger`)
 - Santino Aloisio (`alumno4_aloisio`)
 - Francisco Jaszczuk (`alumno5_jaszczuk`)
+```
