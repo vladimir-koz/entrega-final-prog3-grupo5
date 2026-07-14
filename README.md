@@ -129,6 +129,7 @@ El esquema base esta consolidado en una migracion inicial y luego se agregan mig
 ```txt
 backend/migrations/20260622000000-create-training-schema.js
 backend/migrations/20260714000000-create-training-programs.js
+backend/migrations/20260714020000-link-workouts-to-planning.js
 ```
 
 Tablas actuales:
@@ -441,6 +442,8 @@ Body para crear:
   "nombre": "Entrenamiento lunes",
   "timestamp": "2026-06-22T12:00:00.000Z",
   "grupoMuscularEtiqueta": "Piernas",
+  "workoutTemplateId": 3,
+  "scheduledWorkoutId": 3,
   "series": [
     {
       "exerciseId": 1,
@@ -452,6 +455,12 @@ Body para crear:
 ```
 
 `Workout` representa un entrenamiento realizado. `WorkoutSet` representa las series reales registradas dentro de ese entrenamiento.
+
+`workoutTemplateId` y `scheduledWorkoutId` son opcionales:
+
+- si no se envian, el entrenamiento queda como registro libre;
+- si se envia `workoutTemplateId`, el entrenamiento queda asociado a una plantilla;
+- si se envia `scheduledWorkoutId`, el entrenamiento queda asociado a un entrenamiento programado y el backend completa la plantilla correspondiente.
 
 ## Modelo de Dominio
 
@@ -473,6 +482,8 @@ TrainingProgram 1 --- N ProgramWeek
 ProgramWeek 1 --- N ScheduledWorkout
 ScheduledWorkout N --- 1 WorkoutTemplate
 User 1 --- N Workout
+Workout N --- 1 WorkoutTemplate opcional
+Workout N --- 1 ScheduledWorkout opcional
 Workout 1 --- N WorkoutSet
 Exercise 1 --- N WorkoutSet
 ```
@@ -523,6 +534,8 @@ ScheduledWorkout N --- 1 WorkoutTemplate
 WorkoutTemplate 1 --- N WorkoutTemplateExercise
 WorkoutTemplateExercise N --- 1 Exercise
 User 1 --- N Workout
+Workout N --- 1 WorkoutTemplate opcional
+Workout N --- 1 ScheduledWorkout opcional
 Workout 1 --- N WorkoutSet
 WorkoutSet N --- 1 Exercise
 ```
@@ -536,7 +549,7 @@ Con esta ampliacion se cubren varios casos de uso:
 - semanas de descarga;
 - semanas de descanso;
 - entrenamientos movidos de dia sin romper la planificacion;
-- base para comparar luego lo planificado contra lo realizado.
+- comparacion entre lo planificado y lo realizado.
 
 Ejemplo:
 
@@ -642,10 +655,10 @@ Implementado:
 - programas de entrenamiento de varias semanas
 - semanas de programa
 - entrenamientos programados
+- vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
 
 Pendiente para completar la entrega final:
 
-- vincular entrenamientos reales (`Workout`) con una plantilla o entrenamiento programado;
 - metricas de progreso y visualizaciones en frontend.
 
 ## Documentacion Postman

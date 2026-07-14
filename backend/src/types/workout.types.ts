@@ -8,6 +8,8 @@ export interface CreateWorkoutBody {
   timestamp?: string;
   nombre: string;
   grupoMuscularEtiqueta?: string;
+  workoutTemplateId?: number | null;
+  scheduledWorkoutId?: number | null;
   series?: WorkoutSetInput[];
 }
 
@@ -15,5 +17,7 @@ export interface UpdateWorkoutBody {
   timestamp?: string;
   nombre?: string;
   grupoMuscularEtiqueta?: string;
+  workoutTemplateId?: number | null;
+  scheduledWorkoutId?: number | null;
   series?: WorkoutSetInput[];
 }

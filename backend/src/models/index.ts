@@ -176,6 +176,26 @@ ScheduledWorkout.belongsTo(WorkoutTemplate, {
   as: 'workoutTemplate'
 });
 
+WorkoutTemplate.hasMany(Workout, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workouts'
+});
+
+Workout.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
+});
+
+ScheduledWorkout.hasMany(Workout, {
+  foreignKey: 'scheduledWorkoutId',
+  as: 'workouts'
+});
+
+Workout.belongsTo(ScheduledWorkout, {
+  foreignKey: 'scheduledWorkoutId',
+  as: 'scheduledWorkout'
+});
+
 Workout.hasMany(WorkoutSet, {
   foreignKey: 'workoutId',
   as: 'series',
