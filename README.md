@@ -477,6 +477,84 @@ Body para crear:
 - si se envia `workoutTemplateId`, el entrenamiento queda asociado a una plantilla;
 - si se envia `scheduledWorkoutId`, el entrenamiento queda asociado a un entrenamiento programado y el backend completa la plantilla correspondiente.
 
+### Metrics
+
+```http
+GET /api/metrics/summary
+GET /api/metrics/activity-heatmap
+GET /api/metrics/exercise-progress?exerciseId=1
+```
+
+Las tres rutas aceptan filtros opcionales por fecha:
+
+```http
+?from=2026-07-01T00:00:00.000Z&to=2026-07-31T23:59:59.999Z
+```
+
+`GET /api/metrics/summary` devuelve un resumen general para tarjetas del dashboard:
+
+```json
+{
+  "summary": {
+    "workouts": 8,
+    "completedScheduledWorkouts": 5,
+    "freeWorkouts": 3,
+    "totalSets": 42,
+    "totalRepetitions": 380,
+    "totalVolume": 15400,
+    "averageSetsPerWorkout": 5.25,
+    "averageRpe": 8,
+    "averageRir": 2,
+    "range": {
+      "from": "2026-07-01T00:00:00.000Z",
+      "to": "2026-07-31T23:59:59.999Z"
+    }
+  }
+}
+```
+
+`GET /api/metrics/activity-heatmap` devuelve actividad agrupada por dia. Sirve para un grafico tipo GitHub:
+
+```json
+{
+  "activity": [
+    {
+      "date": "2026-07-14",
+      "workoutCount": 1,
+      "completedScheduledWorkouts": 1,
+      "setCount": 5,
+      "totalVolume": 1800,
+      "intensityLevel": 3
+    }
+  ]
+}
+```
+
+`GET /api/metrics/exercise-progress?exerciseId=1` devuelve evolucion por ejercicio. Sirve para graficos de progreso con Chart.js:
+
+```json
+{
+  "exercise": {
+    "id": 1,
+    "nombre": "Press banca"
+  },
+  "progress": [
+    {
+      "date": "2026-07-14T17:52:45.617Z",
+      "workoutId": 2,
+      "workoutName": "Full body con intensidad",
+      "setCount": 3,
+      "maxWeight": 60,
+      "maxRepetitions": 10,
+      "totalVolume": 1500,
+      "estimatedOneRepMax": 80,
+      "averageRpe": 8,
+      "averageRir": 2
+    }
+  ]
+}
+```
+
 ## Modelo de Dominio
 
 ### Primera entrega
@@ -673,10 +751,11 @@ Implementado:
 - vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
 - validaciones de entrada en rutas principales
 - tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
+- metricas de resumen, heatmap de actividad y progreso por ejercicio
 
 Pendiente para completar la entrega final:
 
-- metricas de progreso y visualizaciones en frontend.
+- visualizaciones en frontend usando las metricas disponibles.
 
 ## Documentacion Postman
 

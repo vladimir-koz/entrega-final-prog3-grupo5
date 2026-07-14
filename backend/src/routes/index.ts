@@ -8,6 +8,7 @@ import trainingProgramRoutes from './trainingProgram.routes';
 import programWeekRoutes from './programWeek.routes';
 import scheduledWorkoutRoutes from './scheduledWorkout.routes';
 import workoutRoutes from './workout.routes';
+import metricsRoutes from './metrics.routes';
 
 const router = Router();
 
@@ -29,6 +30,7 @@ router.use('/training-programs', trainingProgramRoutes);
 router.use('/program-weeks', programWeekRoutes);
 router.use('/scheduled-workouts', scheduledWorkoutRoutes);
 router.use('/workouts', workoutRoutes);
+router.use('/metrics', metricsRoutes);
 
 
 export default router;

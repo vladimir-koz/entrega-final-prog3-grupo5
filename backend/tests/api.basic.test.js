@@ -121,4 +121,30 @@ describe('API base', () => {
 
     expect(response.body.error).toBe('Datos invalidos');
   });
+
+  test('metrics sin token devuelve 401', async () => {
+    const response = await request(app)
+      .get('/api/metrics/summary')
+      .expect(401);
+
+    expect(response.body.error).toBe('Token no proporcionado');
+  });
+
+  test('metrics rechaza fechas invalidas', async () => {
+    const response = await request(app)
+      .get('/api/metrics/summary?from=fecha-invalida')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
+
+  test('exercise progress exige exerciseId valido', async () => {
+    const response = await request(app)
+      .get('/api/metrics/exercise-progress?exerciseId=abc')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
 });
