@@ -130,14 +130,13 @@ Ejecuta migraciones, seeders y luego inicia el servidor. Es el comando usado por
 
 El backend usa migraciones de Sequelize para crear y actualizar el esquema de PostgreSQL.
 
-El esquema base esta consolidado en una migracion inicial y luego se agregan migraciones progresivas para la entrega final:
+El esquema base esta consolidado en una unica migracion inicial:
 
 ```txt
 backend/migrations/20260622000000-create-training-schema.js
-backend/migrations/20260714000000-create-training-programs.js
-backend/migrations/20260714020000-link-workouts-to-planning.js
-backend/migrations/20260714030000-add-rpe-rir-fields.js
 ```
+
+Si una base ya tenia migraciones anteriores aplicadas, hay que resetearla o recrearla antes de usar esta version consolidada.
 
 Tablas actuales:
 
