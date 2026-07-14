@@ -4,6 +4,9 @@ import exerciseRoutes from './exercise.routes';
 import muscleGroupRoutes from './muscleGroup.routes';
 import workoutTemplateRoutes from './workoutTemplate.routes';
 import workoutTemplateExerciseRoutes from './workoutTemplateExercise.routes';
+import trainingProgramRoutes from './trainingProgram.routes';
+import programWeekRoutes from './programWeek.routes';
+import scheduledWorkoutRoutes from './scheduledWorkout.routes';
 import workoutRoutes from './workout.routes';
 
 const router = Router();
@@ -22,6 +25,9 @@ router.use('/exercises', exerciseRoutes);
 router.use('/muscle-groups', muscleGroupRoutes);
 router.use('/workout-templates', workoutTemplateRoutes);
 router.use('/workout-template-exercises', workoutTemplateExerciseRoutes);
+router.use('/training-programs', trainingProgramRoutes);
+router.use('/program-weeks', programWeekRoutes);
+router.use('/scheduled-workouts', scheduledWorkoutRoutes);
 router.use('/workouts', workoutRoutes);
 
 

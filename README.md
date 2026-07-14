@@ -124,10 +124,11 @@ Ejecuta migraciones, seeders y luego inicia el servidor. Es el comando usado por
 
 El backend usa migraciones de Sequelize para crear y actualizar el esquema de PostgreSQL.
 
-Actualmente el esquema inicial esta consolidado en una unica migracion:
+El esquema base esta consolidado en una migracion inicial y luego se agregan migraciones progresivas para la entrega final:
 
 ```txt
 backend/migrations/20260622000000-create-training-schema.js
+backend/migrations/20260714000000-create-training-programs.js
 ```
 
 Tablas actuales:
@@ -136,6 +137,9 @@ Tablas actuales:
 - `exercises`
 - `workout_templates`
 - `workout_template_exercises`
+- `training_programs`
+- `program_weeks`
+- `scheduled_workouts`
 - `muscle_groups`
 - `exercise_muscle_groups`
 - `workouts`
@@ -147,6 +151,7 @@ Los datos iniciales se cargan con seeders:
 backend/seeders/20260622010000-seed-muscle-groups.js
 backend/seeders/20260622020000-seed-exercises.js
 backend/seeders/20260622030000-seed-workout-templates.js
+backend/seeders/20260714010000-seed-training-programs.js
 ```
 
 Datos precargados:
@@ -156,6 +161,8 @@ Datos precargados:
 - relaciones entre ejercicios y grupos musculares
 - 3 plantillas de entrenamiento globales
 - 12 ejercicios planificados dentro de plantillas
+- 1 programa de entrenamiento global de 4 semanas
+- 12 entrenamientos programados dentro del programa global
 
 Para reiniciar la base local desde cero con Docker:
 
@@ -202,6 +209,7 @@ Actualmente aplica a:
 
 - ejercicios
 - plantillas de entrenamiento
+- programas de entrenamiento
 - grupos musculares
 
 ## Endpoints de la API
@@ -339,6 +347,83 @@ Body para crear:
 
 `WorkoutTemplateExercise` representa un ejercicio planificado dentro de una plantilla de entrenamiento.
 
+
+### Training Programs
+
+```http
+GET    /api/training-programs
+GET    /api/training-programs/:id
+POST   /api/training-programs
+PUT    /api/training-programs/:id
+DELETE /api/training-programs/:id
+```
+
+Body para crear:
+
+```json
+{
+  "nombre": "Hipertrofia 6 semanas",
+  "descripcion": "Plan orientado a ganar masa muscular",
+  "objetivo": "Hipertrofia",
+  "fechaInicio": "2026-07-14T00:00:00.000Z",
+  "fechaFin": "2026-08-25T00:00:00.000Z",
+  "estado": "activo"
+}
+```
+
+`TrainingProgram` representa un plan completo. Puede tener varias semanas.
+
+### Program Weeks
+
+```http
+GET    /api/program-weeks?trainingProgramId=1
+GET    /api/program-weeks/:id
+POST   /api/program-weeks
+PUT    /api/program-weeks/:id
+DELETE /api/program-weeks/:id
+```
+
+Body para crear:
+
+```json
+{
+  "trainingProgramId": 1,
+  "numeroSemana": 1,
+  "nombre": "Semana 1",
+  "objetivo": "Adaptacion",
+  "notas": "Cuidar tecnica y no llegar al fallo",
+  "esDescarga": false
+}
+```
+
+`ProgramWeek` representa una semana dentro de un programa. `esDescarga` permite marcar una semana liviana o de descarga.
+
+### Scheduled Workouts
+
+```http
+GET    /api/scheduled-workouts?programWeekId=1
+GET    /api/scheduled-workouts/:id
+POST   /api/scheduled-workouts
+PUT    /api/scheduled-workouts/:id
+DELETE /api/scheduled-workouts/:id
+```
+
+Body para crear:
+
+```json
+{
+  "programWeekId": 1,
+  "workoutTemplateId": 1,
+  "nombre": "Dia 1 - Push",
+  "diaSemana": 1,
+  "fechaProgramada": "2026-07-14T00:00:00.000Z",
+  "orden": 1,
+  "notas": "Entrenamiento principal de empuje"
+}
+```
+
+`ScheduledWorkout` representa un entrenamiento planificado dentro de una semana y apunta a una `WorkoutTemplate`.
+
 ### Workouts
 
 ```http
@@ -372,9 +457,9 @@ Body para crear:
 
 ### Primera entrega
 
-En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, plantillas de entrenamiento y entrenamientos realizados.
+En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, plantillas de entrenamiento y entrenamientos realizados. En la segunda version se agrego una capa de planificacion con programas, semanas y entrenamientos programados.
 
-El modelo inicial quedo asi:
+El modelo actual queda asi:
 
 ```txt
 User 1 --- N Exercise
@@ -383,6 +468,10 @@ User 1 --- N MuscleGroup
 WorkoutTemplate 1 --- N WorkoutTemplateExercise
 Exercise 1 --- N WorkoutTemplateExercise
 Exercise N --- N MuscleGroup
+User 1 --- N TrainingProgram
+TrainingProgram 1 --- N ProgramWeek
+ProgramWeek 1 --- N ScheduledWorkout
+ScheduledWorkout N --- 1 WorkoutTemplate
 User 1 --- N Workout
 Workout 1 --- N WorkoutSet
 Exercise 1 --- N WorkoutSet
@@ -394,13 +483,15 @@ La relacion `Exercise N --- N MuscleGroup` se implementa con:
 exercise_muscle_groups
 ```
 
-En esta primera version, `WorkoutTemplate` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una plantilla "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
+`WorkoutTemplate` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una plantilla "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
+
+La capa nueva de planificacion permite agrupar esas plantillas en programas de varias semanas.
 
 ### Ampliacion para la entrega final
 
-Para la entrega final se plantea ampliar el modelo para representar mejor la forma en que se planifican entrenamientos en un gimnasio. La idea es separar la planificacion de la ejecucion real del entrenamiento.
+Para la entrega final se separa la planificacion de la ejecucion real del entrenamiento.
 
-El modelo final propuesto agrega estas entidades:
+El modelo de planificacion agrega estas entidades:
 
 ```txt
 TrainingProgram
@@ -422,7 +513,7 @@ Conceptualmente:
 - `Workout`: entrenamiento real realizado por el usuario.
 - `WorkoutSet`: serie real realizada dentro de un entrenamiento.
 
-Relaciones esperadas para la version final:
+Relaciones actuales de planificacion:
 
 ```txt
 User 1 --- N TrainingProgram
@@ -432,8 +523,6 @@ ScheduledWorkout N --- 1 WorkoutTemplate
 WorkoutTemplate 1 --- N WorkoutTemplateExercise
 WorkoutTemplateExercise N --- 1 Exercise
 User 1 --- N Workout
-Workout N --- 1 WorkoutTemplate opcional
-Workout N --- 1 ScheduledWorkout opcional
 Workout 1 --- N WorkoutSet
 WorkoutSet N --- 1 Exercise
 ```
@@ -447,7 +536,7 @@ Con esta ampliacion se cubren varios casos de uso:
 - semanas de descarga;
 - semanas de descanso;
 - entrenamientos movidos de dia sin romper la planificacion;
-- comparacion entre lo planificado y lo realizado.
+- base para comparar luego lo planificado contra lo realizado.
 
 Ejemplo:
 
@@ -536,7 +625,7 @@ Si la base de Render ya tenia migraciones anteriores, hay que resetearla o recre
 
 ## Estado Actual del Desarrollo
 
-Implementado en la primera entrega:
+Implementado:
 
 - configuracion Docker del backend
 - conexion con PostgreSQL
@@ -550,14 +639,13 @@ Implementado en la primera entrega:
 - relacion ejercicio-grupo muscular
 - entrenamientos realizados
 - series reales de entrenamiento
+- programas de entrenamiento de varias semanas
+- semanas de programa
+- entrenamientos programados
 
-En desarrollo para la entrega final:
+Pendiente para completar la entrega final:
 
-- evolucion de plantillas simples hacia programas de entrenamiento;
-- programas de entrenamiento de varias semanas;
-- semanas de programa;
-- entrenamientos programados;
-- vinculacion entre planificacion y entrenamientos reales;
+- vincular entrenamientos reales (`Workout`) con una plantilla o entrenamiento programado;
 - metricas de progreso y visualizaciones en frontend.
 
 ## Documentacion Postman

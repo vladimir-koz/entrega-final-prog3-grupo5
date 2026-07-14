@@ -5,6 +5,9 @@ import { ExerciseMuscleGroup, initExerciseMuscleGroupModel } from './ExerciseMus
 import { initMuscleGroupModel, MuscleGroup } from './MuscleGroup';
 import { initWorkoutTemplateModel, WorkoutTemplate } from './WorkoutTemplate';
 import { initWorkoutTemplateExerciseModel, WorkoutTemplateExercise } from './WorkoutTemplateExercise';
+import { initProgramWeekModel, ProgramWeek } from './ProgramWeek';
+import { initScheduledWorkoutModel, ScheduledWorkout } from './ScheduledWorkout';
+import { initTrainingProgramModel, TrainingProgram } from './TrainingProgram';
 import { initUserModel, User } from './User';
 import { initWorkoutModel, Workout } from './Workout';
 import { initWorkoutSetModel, WorkoutSet } from './WorkoutSet';
@@ -38,6 +41,9 @@ initMuscleGroupModel(sequelize);
 initExerciseMuscleGroupModel(sequelize);
 initWorkoutTemplateModel(sequelize);
 initWorkoutTemplateExerciseModel(sequelize);
+initTrainingProgramModel(sequelize);
+initProgramWeekModel(sequelize);
+initScheduledWorkoutModel(sequelize);
 initWorkoutModel(sequelize);
 initWorkoutSetModel(sequelize);
 
@@ -128,6 +134,48 @@ WorkoutTemplateExercise.belongsTo(Exercise, {
   as: 'exercise'
 });
 
+User.hasMany(TrainingProgram, {
+  foreignKey: 'userId',
+  as: 'trainingPrograms'
+});
+
+TrainingProgram.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'user'
+});
+
+TrainingProgram.hasMany(ProgramWeek, {
+  foreignKey: 'trainingProgramId',
+  as: 'weeks',
+  onDelete: 'CASCADE'
+});
+
+ProgramWeek.belongsTo(TrainingProgram, {
+  foreignKey: 'trainingProgramId',
+  as: 'trainingProgram'
+});
+
+ProgramWeek.hasMany(ScheduledWorkout, {
+  foreignKey: 'programWeekId',
+  as: 'scheduledWorkouts',
+  onDelete: 'CASCADE'
+});
+
+ScheduledWorkout.belongsTo(ProgramWeek, {
+  foreignKey: 'programWeekId',
+  as: 'programWeek'
+});
+
+WorkoutTemplate.hasMany(ScheduledWorkout, {
+  foreignKey: 'workoutTemplateId',
+  as: 'scheduledWorkouts'
+});
+
+ScheduledWorkout.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
+});
+
 Workout.hasMany(WorkoutSet, {
   foreignKey: 'workoutId',
   as: 'series',
@@ -146,6 +194,9 @@ export {
   MuscleGroup,
   WorkoutTemplate,
   WorkoutTemplateExercise,
+  TrainingProgram,
+  ProgramWeek,
+  ScheduledWorkout,
   Workout,
   WorkoutSet
 };
