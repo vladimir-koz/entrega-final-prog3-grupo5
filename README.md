@@ -109,6 +109,12 @@ npm run seed
 Carga datos iniciales con los seeders.
 
 ```bash
+npm test
+```
+
+Compila el backend y ejecuta los tests automatizados con Jest.
+
+```bash
 npm run start:migrate
 ```
 
@@ -665,6 +671,7 @@ Implementado:
 - semanas de programa
 - entrenamientos programados
 - vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
+- tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
 
 Pendiente para completar la entrega final:
 
@@ -676,7 +683,7 @@ https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
 
 Pendiente:
 
-- tests de integracion
+- tests de integracion con base de datos
 - integracion con frontend
 
 ## Integrantes

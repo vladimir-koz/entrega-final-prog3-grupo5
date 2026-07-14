@@ -12,7 +12,7 @@
     "start": "node dist/server.js",
     "migrate": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all",
-    "test": "jest"
+    "test": "npm run build && jest --runInBand"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
