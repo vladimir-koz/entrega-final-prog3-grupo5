@@ -370,7 +370,11 @@ Body para crear:
 
 ## Modelo de Dominio
 
-Modelo implementado actualmente:
+### Primera entrega
+
+En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, rutinas y entrenamientos realizados.
+
+El modelo inicial quedo asi:
 
 ```txt
 User 1 --- N Exercise
@@ -389,6 +393,110 @@ La relacion `Exercise N --- N MuscleGroup` se implementa con:
 ```txt
 exercise_muscle_groups
 ```
+
+En esta primera version, `Routine` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una rutina "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
+
+### Ampliacion para la entrega final
+
+Para la entrega final se plantea ampliar el modelo para representar mejor la forma en que se planifican entrenamientos en un gimnasio. La idea es separar la planificacion de la ejecucion real del entrenamiento.
+
+El modelo final propuesto agrega estas entidades:
+
+```txt
+TrainingProgram
+ProgramWeek
+ScheduledWorkout
+WorkoutTemplate
+WorkoutTemplateExercise
+Workout
+WorkoutSet
+```
+
+Conceptualmente:
+
+- `TrainingProgram`: plan completo de entrenamiento, por ejemplo "Hipertrofia 6 semanas".
+- `ProgramWeek`: semana dentro del programa, por ejemplo "Semana 4 - descarga".
+- `ScheduledWorkout`: entrenamiento programado dentro de una semana, por ejemplo "Dia 1 - Push".
+- `WorkoutTemplate`: plantilla de entrenamiento, por ejemplo "Push basico".
+- `WorkoutTemplateExercise`: ejercicio planificado dentro de una plantilla.
+- `Workout`: entrenamiento real realizado por el usuario.
+- `WorkoutSet`: serie real realizada dentro de un entrenamiento.
+
+Relaciones esperadas para la version final:
+
+```txt
+User 1 --- N TrainingProgram
+TrainingProgram 1 --- N ProgramWeek
+ProgramWeek 1 --- N ScheduledWorkout
+ScheduledWorkout N --- 1 WorkoutTemplate
+WorkoutTemplate 1 --- N WorkoutTemplateExercise
+WorkoutTemplateExercise N --- 1 Exercise
+User 1 --- N Workout
+Workout N --- 1 WorkoutTemplate opcional
+Workout N --- 1 ScheduledWorkout opcional
+Workout 1 --- N WorkoutSet
+WorkoutSet N --- 1 Exercise
+```
+
+Con esta ampliacion se cubren varios casos de uso:
+
+- usuarios recreativos que registran entrenamientos libres;
+- usuarios que repiten siempre una misma plantilla;
+- rutinas semanales simples;
+- programas de varias semanas;
+- semanas de descarga;
+- semanas de descanso;
+- entrenamientos movidos de dia sin romper la planificacion;
+- comparacion entre lo planificado y lo realizado.
+
+Ejemplo:
+
+```txt
+TrainingProgram: Hipertrofia 6 semanas
+ProgramWeek: Semana 1
+ScheduledWorkout: Dia 1 - Push
+WorkoutTemplate: Push basico
+WorkoutTemplateExercise: Press banca 4 series de 8 a 10 reps
+Workout: Push realizado el miercoles
+WorkoutSet: Press banca serie 1, 8 reps, 60 kg
+```
+
+### RPE y RIR
+
+Para la entrega final tambien se puede registrar esfuerzo percibido en las series.
+
+`RPE` significa `Rate of Perceived Exertion`, es decir, esfuerzo percibido.
+
+`RIR` significa `Reps In Reserve`, es decir, repeticiones en reserva.
+
+Equivalencia aproximada:
+
+```txt
+RPE 10 = RIR 0 = no quedaba ninguna repeticion mas
+RPE 9  = RIR 1 = quedaba 1 repeticion mas
+RPE 8  = RIR 2 = quedaban 2 repeticiones mas
+RPE 7  = RIR 3 = quedaban 3 repeticiones mas
+```
+
+Ejemplo practico:
+
+```txt
+Press banca
+4 series
+8 a 10 repeticiones
+RIR objetivo: 2
+```
+
+Eso significa que el usuario debe elegir un peso que le permita hacer entre 8 y 10 repeticiones dejando aproximadamente 2 repeticiones en reserva.
+
+En una plantilla se puede guardar el objetivo, y en el entrenamiento real se puede guardar lo que paso:
+
+```txt
+Objetivo: 8-10 reps con RIR 2
+Real: 9 reps, 60 kg, RIR 2
+```
+
+Esto permite analizar si el entrenamiento fue muy liviano, adecuado o demasiado exigente.
 
 ## Deploy en Render
 
@@ -428,7 +536,7 @@ Si la base de Render ya tenia migraciones anteriores, hay que resetearla o recre
 
 ## Estado Actual del Desarrollo
 
-Implementado:
+Implementado en la primera entrega:
 
 - configuracion Docker del backend
 - conexion con PostgreSQL
@@ -436,20 +544,29 @@ Implementado:
 - autenticacion JWT
 - usuarios
 - ejercicios
-- rutinas
+- rutinas como sesiones simples de entrenamiento
 - series planificadas de rutina
 - grupos musculares
 - relacion ejercicio-grupo muscular
-- entrenamientos
+- entrenamientos realizados
 - series reales de entrenamiento
 
-##Documentacion postman: 
+En desarrollo para la entrega final:
+
+- evolucion de rutinas hacia plantillas de entrenamiento;
+- programas de entrenamiento de varias semanas;
+- semanas de programa;
+- entrenamientos programados;
+- vinculacion entre planificacion y entrenamientos reales;
+- metricas de progreso y visualizaciones en frontend.
+
+## Documentacion Postman
+
 https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
 
 Pendiente:
 
 - tests de integracion
-- coleccion de Postman
 - integracion con frontend
 
 ## Integrantes
