@@ -1,4 +1,4 @@
-import { Exercise, Workout, WorkoutSet, sequelize } from '../models';
+import { Exercise, ScheduledWorkout, Workout, WorkoutSet, WorkoutTemplate, sequelize } from '../models';
 import { CreateWorkoutBody, UpdateWorkoutBody } from '../types/workout.types';
 
 const workoutInclude = [
@@ -6,6 +6,15 @@ const workoutInclude = [
     model: WorkoutSet,
     as: 'series',
     include: [{ model: Exercise, as: 'exercise' }]
+  },
+  {
+    model: WorkoutTemplate,
+    as: 'workoutTemplate'
+  },
+  {
+    model: ScheduledWorkout,
+    as: 'scheduledWorkout',
+    include: [{ model: WorkoutTemplate, as: 'workoutTemplate' }]
   }
 ];
 
