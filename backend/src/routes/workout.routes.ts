@@ -7,6 +7,8 @@ import {
   updateWorkout
 } from '../controllers/workout.controller';
 import { verificarToken } from '../middlewares/auth.middleware';
+import { validateRequest } from '../middlewares/validateRequest.middleware';
+import { createWorkoutValidator, updateWorkoutValidator } from '../validators/workout.validators';
 
 const router = Router();
 
@@ -14,8 +16,8 @@ router.use(verificarToken);
 
 router.get('/', listWorkouts);
 router.get('/:id', getWorkoutById);
-router.post('/', createWorkout);
-router.put('/:id', updateWorkout);
+router.post('/', createWorkoutValidator, validateRequest, createWorkout);
+router.put('/:id', updateWorkoutValidator, validateRequest, updateWorkout);
 router.delete('/:id', deleteWorkout);
 
 export default router;
