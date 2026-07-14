@@ -37,8 +37,16 @@ function validarDatosWorkoutTemplateExercise(data: WorkoutTemplateExerciseReques
     throw new AppError('Las repeticiones deben ser un numero positivo', 400);
   }
 
-  if (data.peso !== undefined && data.peso < 0) {
+  if (data.peso !== undefined && data.peso !== null && data.peso < 0) {
     throw new AppError('El peso debe ser un numero positivo', 400);
+  }
+
+  if (data.rirObjetivo !== undefined && data.rirObjetivo !== null && (!Number.isInteger(data.rirObjetivo) || data.rirObjetivo < 0 || data.rirObjetivo > 10)) {
+    throw new AppError('El rirObjetivo debe ser un entero entre 0 y 10', 400);
+  }
+
+  if (data.rpeObjetivo !== undefined && data.rpeObjetivo !== null && (data.rpeObjetivo < 1 || data.rpeObjetivo > 10)) {
+    throw new AppError('El rpeObjetivo debe estar entre 1 y 10', 400);
   }
 }
 
@@ -120,7 +128,9 @@ export async function createWorkoutTemplateExerciseService(data: WorkoutTemplate
     exerciseId: data.exerciseId,
     orden: data.orden,
     repeticiones: data.repeticiones,
-    peso: data.peso ?? null
+    peso: data.peso ?? null,
+    rirObjetivo: data.rirObjetivo ?? null,
+    rpeObjetivo: data.rpeObjetivo ?? null
   });
 
   return {
@@ -146,7 +156,9 @@ export async function updateWorkoutTemplateExerciseService(id: number, data: Wor
     exerciseId: data.exerciseId,
     orden: data.orden,
     repeticiones: data.repeticiones,
-    peso: data.peso
+    peso: data.peso,
+    rirObjetivo: data.rirObjetivo,
+    rpeObjetivo: data.rpeObjetivo
   });
 
   if (!workoutTemplateExercise) {

@@ -1,6 +1,8 @@
 export interface WorkoutSetInput {
   repeticiones: number;
   peso: number;
+  rir?: number | null;
+  rpe?: number | null;
   exerciseId: number;
 }
 

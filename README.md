@@ -130,6 +130,7 @@ El esquema base esta consolidado en una migracion inicial y luego se agregan mig
 backend/migrations/20260622000000-create-training-schema.js
 backend/migrations/20260714000000-create-training-programs.js
 backend/migrations/20260714020000-link-workouts-to-planning.js
+backend/migrations/20260714030000-add-rpe-rir-fields.js
 ```
 
 Tablas actuales:
@@ -342,11 +343,15 @@ Body para crear:
   "exerciseId": 2,
   "orden": 1,
   "repeticiones": 10,
-  "peso": 80
+  "peso": 80,
+  "rirObjetivo": 2,
+  "rpeObjetivo": 8
 }
 ```
 
 `WorkoutTemplateExercise` representa un ejercicio planificado dentro de una plantilla de entrenamiento.
+
+`rirObjetivo` y `rpeObjetivo` son opcionales y sirven para indicar la intensidad objetivo de ese ejercicio planificado.
 
 
 ### Training Programs
@@ -448,13 +453,17 @@ Body para crear:
     {
       "exerciseId": 1,
       "repeticiones": 12,
-      "peso": 40
+      "peso": 40,
+      "rir": 2,
+      "rpe": 8
     }
   ]
 }
 ```
 
 `Workout` representa un entrenamiento realizado. `WorkoutSet` representa las series reales registradas dentro de ese entrenamiento.
+
+`rir` y `rpe` son opcionales en cada serie real. Sirven para guardar que tan exigente fue esa serie.
 
 `workoutTemplateId` y `scheduledWorkoutId` son opcionales:
 
@@ -565,7 +574,7 @@ WorkoutSet: Press banca serie 1, 8 reps, 60 kg
 
 ### RPE y RIR
 
-Para la entrega final tambien se puede registrar esfuerzo percibido en las series. No es obligatorio para usar la app: sirve como dato adicional para usuarios que quieran controlar mejor la intensidad.
+La API permite registrar esfuerzo percibido en las series. No es obligatorio para usar la app: sirve como dato adicional para usuarios que quieran controlar mejor la intensidad.
 
 `RPE` significa `Rate of Perceived Exertion`, es decir, esfuerzo percibido.
 
@@ -591,7 +600,7 @@ RIR objetivo: 2
 
 Eso significa que el usuario debe elegir un peso que le permita hacer entre 8 y 10 repeticiones dejando aproximadamente 2 repeticiones en reserva.
 
-En una plantilla se puede guardar el objetivo, y en el entrenamiento real se puede guardar lo que paso:
+En una plantilla se puede guardar el objetivo con `rirObjetivo` / `rpeObjetivo`, y en el entrenamiento real se puede guardar lo que paso con `rir` / `rpe`:
 
 ```txt
 Objetivo: 8-10 reps con RIR 2

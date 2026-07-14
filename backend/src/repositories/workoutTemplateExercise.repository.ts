@@ -7,6 +7,8 @@ export interface WorkoutTemplateExerciseCreateData {
   orden: number;
   repeticiones: number;
   peso?: number | null;
+  rirObjetivo?: number | null;
+  rpeObjetivo?: number | null;
 }
 
 export async function findWorkoutTemplateExercisesByWorkoutTemplateId(workoutTemplateId: number) {

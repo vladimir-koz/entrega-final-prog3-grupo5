@@ -3,5 +3,7 @@ export interface WorkoutTemplateExerciseRequestBody {
   exerciseId: number;
   orden: number;
   repeticiones: number;
-  peso?: number;
+  peso?: number | null;
+  rirObjetivo?: number | null;
+  rpeObjetivo?: number | null;
 }

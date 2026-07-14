@@ -38,6 +38,16 @@ async function validarEjerciciosDeSeries(
   if (existingCount !== exerciseIds.length) {
     throw new AppError('Una o mas series usan ejercicios inexistentes o de otro usuario', 400);
   }
+
+  for (const serie of series) {
+    if (serie.rir !== undefined && serie.rir !== null && (!Number.isInteger(serie.rir) || serie.rir < 0 || serie.rir > 10)) {
+      throw new AppError('series.rir debe ser un entero entre 0 y 10', 400);
+    }
+
+    if (serie.rpe !== undefined && serie.rpe !== null && (serie.rpe < 1 || serie.rpe > 10)) {
+      throw new AppError('series.rpe debe estar entre 1 y 10', 400);
+    }
+  }
 }
 
 function validarIdOpcional(id: number | null | undefined, fieldName: string): void {

@@ -12,13 +12,15 @@ export interface WorkoutTemplateExerciseAttributes {
   orden: number;
   repeticiones: number;
   peso?: number | null;
+  rirObjetivo?: number | null;
+  rpeObjetivo?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 type WorkoutTemplateExerciseCreationAttributes = Optional<
   WorkoutTemplateExerciseAttributes,
-  'id' | 'peso' | 'createdAt' | 'updatedAt'
+  'id' | 'peso' | 'rirObjetivo' | 'rpeObjetivo' | 'createdAt' | 'updatedAt'
 >;
 
 export class WorkoutTemplateExercise extends Model<WorkoutTemplateExerciseAttributes, WorkoutTemplateExerciseCreationAttributes> implements WorkoutTemplateExerciseAttributes {
@@ -28,6 +30,8 @@ export class WorkoutTemplateExercise extends Model<WorkoutTemplateExerciseAttrib
   public orden!: number;
   public repeticiones!: number;
   public peso!: number | null;
+  public rirObjetivo!: number | null;
+  public rpeObjetivo!: number | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -71,6 +75,22 @@ export function initWorkoutTemplateExerciseModel(sequelize: Sequelize): typeof W
       peso: {
         type: DataTypes.FLOAT,
         allowNull: true
+      },
+      rirObjetivo: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+          min: 0,
+          max: 10
+        }
+      },
+      rpeObjetivo: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        validate: {
+          min: 1,
+          max: 10
+        }
       }
     },
     {

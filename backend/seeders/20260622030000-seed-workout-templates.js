@@ -9,10 +9,10 @@ const workoutTemplates = [
     dificultad: 'principiante',
     tiempoEstimado: 45,
     exercises: [
-      { exerciseName: 'Sentadilla', orden: 1, repeticiones: 12, peso: null },
-      { exerciseName: 'Flexiones', orden: 2, repeticiones: 10, peso: null },
-      { exerciseName: 'Remo con barra', orden: 3, repeticiones: 10, peso: null },
-      { exerciseName: 'Plancha', orden: 4, repeticiones: 1, peso: null }
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Sentadilla', orden: 1, repeticiones: 12, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Flexiones', orden: 2, repeticiones: 10, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Remo con barra', orden: 3, repeticiones: 10, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Plancha', orden: 4, repeticiones: 1, peso: null }
     ]
   },
   {
@@ -23,10 +23,10 @@ const workoutTemplates = [
     dificultad: 'intermedio',
     tiempoEstimado: 60,
     exercises: [
-      { exerciseName: 'Press de banca', orden: 1, repeticiones: 8, peso: null },
-      { exerciseName: 'Remo con barra', orden: 2, repeticiones: 8, peso: null },
-      { exerciseName: 'Press militar', orden: 3, repeticiones: 10, peso: null },
-      { exerciseName: 'Dominadas', orden: 4, repeticiones: 8, peso: null }
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Press de banca', orden: 1, repeticiones: 8, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Remo con barra', orden: 2, repeticiones: 8, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Press militar', orden: 3, repeticiones: 10, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Dominadas', orden: 4, repeticiones: 8, peso: null }
     ]
   },
   {
@@ -37,10 +37,10 @@ const workoutTemplates = [
     dificultad: 'intermedio',
     tiempoEstimado: 55,
     exercises: [
-      { exerciseName: 'Sentadilla', orden: 1, repeticiones: 10, peso: null },
-      { exerciseName: 'Peso muerto', orden: 2, repeticiones: 8, peso: null },
-      { exerciseName: 'Zancadas', orden: 3, repeticiones: 12, peso: null },
-      { exerciseName: 'Plancha', orden: 4, repeticiones: 1, peso: null }
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Sentadilla', orden: 1, repeticiones: 10, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Peso muerto', orden: 2, repeticiones: 8, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Zancadas', orden: 3, repeticiones: 12, peso: null },
+      { rirObjetivo: 2, rpeObjetivo: 8, exerciseName: 'Plancha', orden: 4, repeticiones: 1, peso: null }
     ]
   }
 ];
@@ -98,6 +98,8 @@ async function insertWorkoutTemplateExercise(queryInterface, workoutTemplateName
         "orden",
         "repeticiones",
         "peso",
+        "rirObjetivo",
+        "rpeObjetivo",
         "createdAt",
         "updatedAt"
       )
@@ -107,6 +109,8 @@ async function insertWorkoutTemplateExercise(queryInterface, workoutTemplateName
         :orden,
         :repeticiones,
         :peso,
+        :rirObjetivo,
+        :rpeObjetivo,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
       FROM "workout_templates" wt
@@ -128,7 +132,9 @@ async function insertWorkoutTemplateExercise(queryInterface, workoutTemplateName
         exerciseName: workoutTemplateExercise.exerciseName,
         orden: workoutTemplateExercise.orden,
         repeticiones: workoutTemplateExercise.repeticiones,
-        peso: workoutTemplateExercise.peso
+        peso: workoutTemplateExercise.peso,
+        rirObjetivo: workoutTemplateExercise.rirObjetivo,
+        rpeObjetivo: workoutTemplateExercise.rpeObjetivo
       }
     }
   );
