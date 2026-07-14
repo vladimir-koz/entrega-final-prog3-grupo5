@@ -1,14 +1,14 @@
 'use strict';
 
-const routines = [
+const workoutTemplates = [
   {
     nombre: 'Full body inicial',
-    descripcion: 'Rutina general para empezar a entrenar todo el cuerpo.',
+    descripcion: 'Plantilla general para empezar a entrenar todo el cuerpo.',
     tipo: 'Full body',
     grupoMuscularEtiqueta: 'Cuerpo completo',
     dificultad: 'principiante',
     tiempoEstimado: 45,
-    sets: [
+    exercises: [
       { exerciseName: 'Sentadilla', orden: 1, repeticiones: 12, peso: null },
       { exerciseName: 'Flexiones', orden: 2, repeticiones: 10, peso: null },
       { exerciseName: 'Remo con barra', orden: 3, repeticiones: 10, peso: null },
@@ -17,12 +17,12 @@ const routines = [
   },
   {
     nombre: 'Fuerza tren superior',
-    descripcion: 'Rutina enfocada en empujes y tracciones de tren superior.',
+    descripcion: 'Plantilla enfocada en empujes y tracciones de tren superior.',
     tipo: 'Fuerza',
     grupoMuscularEtiqueta: 'Tren superior',
     dificultad: 'intermedio',
     tiempoEstimado: 60,
-    sets: [
+    exercises: [
       { exerciseName: 'Press de banca', orden: 1, repeticiones: 8, peso: null },
       { exerciseName: 'Remo con barra', orden: 2, repeticiones: 8, peso: null },
       { exerciseName: 'Press militar', orden: 3, repeticiones: 10, peso: null },
@@ -31,12 +31,12 @@ const routines = [
   },
   {
     nombre: 'Piernas y gluteos',
-    descripcion: 'Rutina para tren inferior con ejercicios bilaterales y unilaterales.',
+    descripcion: 'Plantilla para tren inferior con ejercicios bilaterales y unilaterales.',
     tipo: 'Hipertrofia',
     grupoMuscularEtiqueta: 'Piernas',
     dificultad: 'intermedio',
     tiempoEstimado: 55,
-    sets: [
+    exercises: [
       { exerciseName: 'Sentadilla', orden: 1, repeticiones: 10, peso: null },
       { exerciseName: 'Peso muerto', orden: 2, repeticiones: 8, peso: null },
       { exerciseName: 'Zancadas', orden: 3, repeticiones: 12, peso: null },
@@ -45,10 +45,10 @@ const routines = [
   }
 ];
 
-async function insertRoutine(queryInterface, routine) {
+async function insertWorkoutTemplate(queryInterface, workoutTemplate) {
   await queryInterface.sequelize.query(
     `
-      INSERT INTO "routines" (
+      INSERT INTO "workout_templates" (
         "nombre",
         "descripcion",
         "tipo",
@@ -71,29 +71,29 @@ async function insertRoutine(queryInterface, routine) {
         CURRENT_TIMESTAMP
       WHERE NOT EXISTS (
         SELECT 1
-        FROM "routines"
+        FROM "workout_templates"
         WHERE "nombre" = :nombre
           AND "userId" IS NULL
       );
     `,
     {
       replacements: {
-        nombre: routine.nombre,
-        descripcion: routine.descripcion,
-        tipo: routine.tipo,
-        grupoMuscularEtiqueta: routine.grupoMuscularEtiqueta,
-        dificultad: routine.dificultad,
-        tiempoEstimado: routine.tiempoEstimado
+        nombre: workoutTemplate.nombre,
+        descripcion: workoutTemplate.descripcion,
+        tipo: workoutTemplate.tipo,
+        grupoMuscularEtiqueta: workoutTemplate.grupoMuscularEtiqueta,
+        dificultad: workoutTemplate.dificultad,
+        tiempoEstimado: workoutTemplate.tiempoEstimado
       }
     }
   );
 }
 
-async function insertRoutineSet(queryInterface, routineName, routineSet) {
+async function insertWorkoutTemplateExercise(queryInterface, workoutTemplateName, workoutTemplateExercise) {
   await queryInterface.sequelize.query(
     `
-      INSERT INTO "routine_sets" (
-        "routineId",
+      INSERT INTO "workout_template_exercises" (
+        "workoutTemplateId",
         "exerciseId",
         "orden",
         "repeticiones",
@@ -102,33 +102,33 @@ async function insertRoutineSet(queryInterface, routineName, routineSet) {
         "updatedAt"
       )
       SELECT
-        r."id",
+        wt."id",
         e."id",
         :orden,
         :repeticiones,
         :peso,
         CURRENT_TIMESTAMP,
         CURRENT_TIMESTAMP
-      FROM "routines" r
+      FROM "workout_templates" wt
       INNER JOIN "exercises" e
         ON e."nombre" = :exerciseName
        AND e."userId" IS NULL
-      WHERE r."nombre" = :routineName
-        AND r."userId" IS NULL
+      WHERE wt."nombre" = :workoutTemplateName
+        AND wt."userId" IS NULL
         AND NOT EXISTS (
           SELECT 1
-          FROM "routine_sets" rs
-          WHERE rs."routineId" = r."id"
-            AND rs."orden" = :orden
+          FROM "workout_template_exercises" wte
+          WHERE wte."workoutTemplateId" = wt."id"
+            AND wte."orden" = :orden
         );
     `,
     {
       replacements: {
-        routineName,
-        exerciseName: routineSet.exerciseName,
-        orden: routineSet.orden,
-        repeticiones: routineSet.repeticiones,
-        peso: routineSet.peso
+        workoutTemplateName,
+        exerciseName: workoutTemplateExercise.exerciseName,
+        orden: workoutTemplateExercise.orden,
+        repeticiones: workoutTemplateExercise.repeticiones,
+        peso: workoutTemplateExercise.peso
       }
     }
   );
@@ -137,40 +137,40 @@ async function insertRoutineSet(queryInterface, routineName, routineSet) {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    for (const routine of routines) {
-      await insertRoutine(queryInterface, routine);
+    for (const workoutTemplate of workoutTemplates) {
+      await insertWorkoutTemplate(queryInterface, workoutTemplate);
 
-      for (const routineSet of routine.sets) {
-        await insertRoutineSet(queryInterface, routine.nombre, routineSet);
+      for (const workoutTemplateExercise of workoutTemplate.exercises) {
+        await insertWorkoutTemplateExercise(queryInterface, workoutTemplate.nombre, workoutTemplateExercise);
       }
     }
   },
 
   async down(queryInterface) {
-    for (const routine of routines) {
+    for (const workoutTemplate of workoutTemplates) {
       await queryInterface.sequelize.query(
         `
-          DELETE FROM "routine_sets"
-          WHERE "routineId" IN (
+          DELETE FROM "workout_template_exercises"
+          WHERE "workoutTemplateId" IN (
             SELECT "id"
-            FROM "routines"
+            FROM "workout_templates"
             WHERE "nombre" = :nombre
               AND "userId" IS NULL
           );
         `,
         {
-          replacements: { nombre: routine.nombre }
+          replacements: { nombre: workoutTemplate.nombre }
         }
       );
 
       await queryInterface.sequelize.query(
         `
-          DELETE FROM "routines"
+          DELETE FROM "workout_templates"
           WHERE "nombre" = :nombre
             AND "userId" IS NULL;
         `,
         {
-          replacements: { nombre: routine.nombre }
+          replacements: { nombre: workoutTemplate.nombre }
         }
       );
     }

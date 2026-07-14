@@ -5,7 +5,7 @@ import {
     Sequelize
 } from 'sequelize';
 
-export interface RoutineAttributes {
+export interface WorkoutTemplateAttributes {
     id: number;
     nombre: string;
     descripcion?: string | null;
@@ -18,12 +18,12 @@ export interface RoutineAttributes {
     updatedAt?: Date;
 }
 
-type RoutineCreationAttributes = Optional<
-    RoutineAttributes,
+type WorkoutTemplateCreationAttributes = Optional<
+    WorkoutTemplateAttributes,
     'id' | 'descripcion' | 'tipo' | 'userId' | 'grupoMuscularEtiqueta' | 'dificultad' | 'tiempoEstimado' | 'createdAt' | 'updatedAt'
 >;
 
-export class Routine extends Model<RoutineAttributes, RoutineCreationAttributes> implements RoutineAttributes {
+export class WorkoutTemplate extends Model<WorkoutTemplateAttributes, WorkoutTemplateCreationAttributes> implements WorkoutTemplateAttributes {
     public id!: number;
     public nombre!: string;
     public descripcion!: string | null;
@@ -36,8 +36,8 @@ export class Routine extends Model<RoutineAttributes, RoutineCreationAttributes>
     public readonly updatedAt!: Date;
 }
 
-export function initRoutineModel(sequelize: Sequelize): typeof Routine {
-    Routine.init(
+export function initWorkoutTemplateModel(sequelize: Sequelize): typeof WorkoutTemplate {
+    WorkoutTemplate.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -79,10 +79,10 @@ export function initRoutineModel(sequelize: Sequelize): typeof Routine {
         },
         {
             sequelize,
-            tableName: 'routines',
+            tableName: 'workout_templates',
             timestamps: true
         }
     );
 
-    return Routine;
+    return WorkoutTemplate;
 }

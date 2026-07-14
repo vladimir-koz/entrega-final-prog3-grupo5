@@ -134,8 +134,8 @@ Tablas actuales:
 
 - `users`
 - `exercises`
-- `routines`
-- `routine_sets`
+- `workout_templates`
+- `workout_template_exercises`
 - `muscle_groups`
 - `exercise_muscle_groups`
 - `workouts`
@@ -146,7 +146,7 @@ Los datos iniciales se cargan con seeders:
 ```txt
 backend/seeders/20260622010000-seed-muscle-groups.js
 backend/seeders/20260622020000-seed-exercises.js
-backend/seeders/20260622030000-seed-routines.js
+backend/seeders/20260622030000-seed-workout-templates.js
 ```
 
 Datos precargados:
@@ -154,8 +154,8 @@ Datos precargados:
 - 10 grupos musculares globales
 - 12 ejercicios globales
 - relaciones entre ejercicios y grupos musculares
-- 3 rutinas globales
-- 12 series planificadas de rutina
+- 3 plantillas de entrenamiento globales
+- 12 ejercicios planificados dentro de plantillas
 
 Para reiniciar la base local desde cero con Docker:
 
@@ -201,7 +201,7 @@ Reglas de escritura:
 Actualmente aplica a:
 
 - ejercicios
-- rutinas
+- plantillas de entrenamiento
 - grupos musculares
 
 ## Endpoints de la API
@@ -292,14 +292,14 @@ Body para crear:
 }
 ```
 
-### Routines
+### WorkoutTemplates
 
 ```http
-GET    /api/routines
-GET    /api/routines/:id
-POST   /api/routines
-PUT    /api/routines/:id
-DELETE /api/routines/:id
+GET    /api/workout-templates
+GET    /api/workout-templates/:id
+POST   /api/workout-templates
+PUT    /api/workout-templates/:id
+DELETE /api/workout-templates/:id
 ```
 
 Body para crear:
@@ -307,7 +307,7 @@ Body para crear:
 ```json
 {
   "nombre": "Fuerza tren inferior",
-  "descripcion": "Rutina enfocada en fuerza para tren inferior",
+  "descripcion": "Plantilla enfocada en fuerza para tren inferior",
   "tipo": "Fuerza",
   "grupoMuscularEtiqueta": "Piernas",
   "dificultad": "intermedio",
@@ -315,21 +315,21 @@ Body para crear:
 }
 ```
 
-### Routine Sets
+### WorkoutTemplate Exercises
 
 ```http
-GET    /api/routine-sets?routineId=1
-GET    /api/routine-sets/:id
-POST   /api/routine-sets
-PUT    /api/routine-sets/:id
-DELETE /api/routine-sets/:id
+GET    /api/workout-template-exercises?workoutTemplateId=1
+GET    /api/workout-template-exercises/:id
+POST   /api/workout-template-exercises
+PUT    /api/workout-template-exercises/:id
+DELETE /api/workout-template-exercises/:id
 ```
 
 Body para crear:
 
 ```json
 {
-  "routineId": 1,
+  "workoutTemplateId": 1,
   "exerciseId": 2,
   "orden": 1,
   "repeticiones": 10,
@@ -337,7 +337,7 @@ Body para crear:
 }
 ```
 
-`RoutineSet` representa el trabajo planificado dentro de una rutina.
+`WorkoutTemplateExercise` representa un ejercicio planificado dentro de una plantilla de entrenamiento.
 
 ### Workouts
 
@@ -372,16 +372,16 @@ Body para crear:
 
 ### Primera entrega
 
-En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, rutinas y entrenamientos realizados.
+En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, plantillas de entrenamiento y entrenamientos realizados.
 
 El modelo inicial quedo asi:
 
 ```txt
 User 1 --- N Exercise
-User 1 --- N Routine
+User 1 --- N WorkoutTemplate
 User 1 --- N MuscleGroup
-Routine 1 --- N RoutineSet
-Exercise 1 --- N RoutineSet
+WorkoutTemplate 1 --- N WorkoutTemplateExercise
+Exercise 1 --- N WorkoutTemplateExercise
 Exercise N --- N MuscleGroup
 User 1 --- N Workout
 Workout 1 --- N WorkoutSet
@@ -394,7 +394,7 @@ La relacion `Exercise N --- N MuscleGroup` se implementa con:
 exercise_muscle_groups
 ```
 
-En esta primera version, `Routine` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una rutina "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
+En esta primera version, `WorkoutTemplate` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una plantilla "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
 
 ### Ampliacion para la entrega final
 
@@ -442,7 +442,7 @@ Con esta ampliacion se cubren varios casos de uso:
 
 - usuarios recreativos que registran entrenamientos libres;
 - usuarios que repiten siempre una misma plantilla;
-- rutinas semanales simples;
+- plantillas de entrenamiento semanales simples;
 - programas de varias semanas;
 - semanas de descarga;
 - semanas de descanso;
@@ -463,7 +463,7 @@ WorkoutSet: Press banca serie 1, 8 reps, 60 kg
 
 ### RPE y RIR
 
-Para la entrega final tambien se puede registrar esfuerzo percibido en las series.
+Para la entrega final tambien se puede registrar esfuerzo percibido en las series. No es obligatorio para usar la app: sirve como dato adicional para usuarios que quieran controlar mejor la intensidad.
 
 `RPE` significa `Rate of Perceived Exertion`, es decir, esfuerzo percibido.
 
@@ -544,8 +544,8 @@ Implementado en la primera entrega:
 - autenticacion JWT
 - usuarios
 - ejercicios
-- rutinas como sesiones simples de entrenamiento
-- series planificadas de rutina
+- plantillas de entrenamiento como sesiones simples de entrenamiento
+- ejercicios planificados dentro de plantillas
 - grupos musculares
 - relacion ejercicio-grupo muscular
 - entrenamientos realizados
@@ -553,7 +553,7 @@ Implementado en la primera entrega:
 
 En desarrollo para la entrega final:
 
-- evolucion de rutinas hacia plantillas de entrenamiento;
+- evolucion de plantillas simples hacia programas de entrenamiento;
 - programas de entrenamiento de varias semanas;
 - semanas de programa;
 - entrenamientos programados;

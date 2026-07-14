@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  createRoutineSetService,
-  deleteRoutineSetService,
-  getRoutineSetById,
-  listRoutineSets,
-  updateRoutineSetService
-} from '../services/routineSet.service';
+  createWorkoutTemplateExerciseService,
+  deleteWorkoutTemplateExerciseService,
+  getWorkoutTemplateExerciseById,
+  listWorkoutTemplateExercises,
+  updateWorkoutTemplateExerciseService
+} from '../services/workoutTemplateExercise.service';
 import { AppError } from '../utils/AppError';
 
 function getAuthenticatedUserId(req: Request): number {
@@ -18,14 +18,14 @@ function getAuthenticatedUserId(req: Request): number {
 
 export async function index(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const routineId = Number(req.query.routineId);
+    const workoutTemplateId = Number(req.query.workoutTemplateId);
 
-    if (!routineId) {
-      res.status(400).json({ error: 'El query param routineId es obligatorio' });
+    if (!workoutTemplateId) {
+      res.status(400).json({ error: 'El query param workoutTemplateId es obligatorio' });
       return;
     }
 
-    const result = await listRoutineSets(routineId, getAuthenticatedUserId(req));
+    const result = await listWorkoutTemplateExercises(workoutTemplateId, getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -34,7 +34,7 @@ export async function index(req: Request, res: Response, next: NextFunction): Pr
 
 export async function show(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await getRoutineSetById(Number(req.params.id), getAuthenticatedUserId(req));
+    const result = await getWorkoutTemplateExerciseById(Number(req.params.id), getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -43,7 +43,7 @@ export async function show(req: Request, res: Response, next: NextFunction): Pro
 
 export async function store(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await createRoutineSetService(req.body, getAuthenticatedUserId(req));
+    const result = await createWorkoutTemplateExerciseService(req.body, getAuthenticatedUserId(req));
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -52,7 +52,7 @@ export async function store(req: Request, res: Response, next: NextFunction): Pr
 
 export async function update(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await updateRoutineSetService(Number(req.params.id), req.body, getAuthenticatedUserId(req));
+    const result = await updateWorkoutTemplateExerciseService(Number(req.params.id), req.body, getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
@@ -61,7 +61,7 @@ export async function update(req: Request, res: Response, next: NextFunction): P
 
 export async function destroy(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await deleteRoutineSetService(Number(req.params.id), getAuthenticatedUserId(req));
+    const result = await deleteWorkoutTemplateExerciseService(Number(req.params.id), getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);

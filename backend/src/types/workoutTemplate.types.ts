@@ -1,4 +1,4 @@
-export interface RoutineRequestBody {
+export interface WorkoutTemplateRequestBody {
   nombre: string;
   descripcion?: string;
   tipo?: string;

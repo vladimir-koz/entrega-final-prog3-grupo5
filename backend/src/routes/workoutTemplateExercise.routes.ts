@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { destroy, index, show, store, update } from '../controllers/routineSet.controller';
+import { destroy, index, show, store, update } from '../controllers/workoutTemplateExercise.controller';
 import { verificarToken } from '../middlewares/auth.middleware';
 
 const router = Router();

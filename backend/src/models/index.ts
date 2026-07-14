@@ -3,8 +3,8 @@ import databaseConfig from '../config/database';
 import { Exercise, initExerciseModel } from './Exercise';
 import { ExerciseMuscleGroup, initExerciseMuscleGroupModel } from './ExerciseMuscleGroup';
 import { initMuscleGroupModel, MuscleGroup } from './MuscleGroup';
-import { initRoutineModel, Routine } from './Routine';
-import { initRoutineSetModel, RoutineSet } from './RoutineSet';
+import { initWorkoutTemplateModel, WorkoutTemplate } from './WorkoutTemplate';
+import { initWorkoutTemplateExerciseModel, WorkoutTemplateExercise } from './WorkoutTemplateExercise';
 import { initUserModel, User } from './User';
 import { initWorkoutModel, Workout } from './Workout';
 import { initWorkoutSetModel, WorkoutSet } from './WorkoutSet';
@@ -36,20 +36,20 @@ initUserModel(sequelize);
 initExerciseModel(sequelize);
 initMuscleGroupModel(sequelize);
 initExerciseMuscleGroupModel(sequelize);
-initRoutineModel(sequelize);
-initRoutineSetModel(sequelize);
+initWorkoutTemplateModel(sequelize);
+initWorkoutTemplateExerciseModel(sequelize);
 initWorkoutModel(sequelize);
 initWorkoutSetModel(sequelize);
 
-User.hasMany(Routine, {
+User.hasMany(WorkoutTemplate, {
   foreignKey: 'userId',
-  as: 'routines'
+  as: 'workoutTemplates'
 });
 
 User.hasMany(Workout, { foreignKey: 'userId', as: 'workouts' });
 Workout.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-Routine.belongsTo(User, {
+WorkoutTemplate.belongsTo(User, {
   foreignKey: 'userId',
   as: 'user'
 });
@@ -108,22 +108,22 @@ ExerciseMuscleGroup.belongsTo(MuscleGroup, {
   as: 'muscleGroup'
 });
 
-Routine.hasMany(RoutineSet, {
-  foreignKey: 'routineId',
-  as: 'routineSets'
+WorkoutTemplate.hasMany(WorkoutTemplateExercise, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplateExercises'
 });
 
-RoutineSet.belongsTo(Routine, {
-  foreignKey: 'routineId',
-  as: 'routine'
+WorkoutTemplateExercise.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
 });
 
-Exercise.hasMany(RoutineSet, {
+Exercise.hasMany(WorkoutTemplateExercise, {
   foreignKey: 'exerciseId',
-  as: 'routineSets'
+  as: 'workoutTemplateExercises'
 });
 
-RoutineSet.belongsTo(Exercise, {
+WorkoutTemplateExercise.belongsTo(Exercise, {
   foreignKey: 'exerciseId',
   as: 'exercise'
 });
@@ -144,8 +144,8 @@ export {
   Exercise,
   ExerciseMuscleGroup,
   MuscleGroup,
-  Routine,
-  RoutineSet,
+  WorkoutTemplate,
+  WorkoutTemplateExercise,
   Workout,
   WorkoutSet
 };

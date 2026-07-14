@@ -84,7 +84,7 @@ module.exports = {
       name: 'exercises_user_id_index'
     });
 
-    await queryInterface.createTable('routines', {
+    await queryInterface.createTable('workout_templates', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -137,8 +137,8 @@ module.exports = {
       }
     });
 
-    await queryInterface.addIndex('routines', ['userId'], {
-      name: 'routines_user_id_index'
+    await queryInterface.addIndex('workout_templates', ['userId'], {
+      name: 'workout_templates_user_id_index'
     });
 
     await queryInterface.createTable('muscle_groups', {
@@ -257,18 +257,18 @@ module.exports = {
       name: 'exercise_muscle_groups_muscle_group_id_index'
     });
 
-    await queryInterface.createTable('routine_sets', {
+    await queryInterface.createTable('workout_template_exercises', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false
       },
-      routineId: {
+      workoutTemplateId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'routines',
+          model: 'workout_templates',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -308,12 +308,12 @@ module.exports = {
       }
     });
 
-    await queryInterface.addIndex('routine_sets', ['routineId'], {
-      name: 'routine_sets_routine_id_index'
+    await queryInterface.addIndex('workout_template_exercises', ['workoutTemplateId'], {
+      name: 'workout_template_exercises_workout_template_id_index'
     });
 
-    await queryInterface.addIndex('routine_sets', ['exerciseId'], {
-      name: 'routine_sets_exercise_id_index'
+    await queryInterface.addIndex('workout_template_exercises', ['exerciseId'], {
+      name: 'workout_template_exercises_exercise_id_index'
     });
 
     await queryInterface.createTable('workout_sets', {
@@ -374,11 +374,11 @@ module.exports = {
 
   async down(queryInterface) {
     await queryInterface.dropTable('workout_sets');
-    await queryInterface.dropTable('routine_sets');
+    await queryInterface.dropTable('workout_template_exercises');
     await queryInterface.dropTable('exercise_muscle_groups');
     await queryInterface.dropTable('workouts');
     await queryInterface.dropTable('muscle_groups');
-    await queryInterface.dropTable('routines');
+    await queryInterface.dropTable('workout_templates');
     await queryInterface.dropTable('exercises');
     await queryInterface.dropTable('users');
   }

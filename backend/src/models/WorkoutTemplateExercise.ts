@@ -5,9 +5,9 @@ import {
   Sequelize
 } from 'sequelize';
 
-export interface RoutineSetAttributes {
+export interface WorkoutTemplateExerciseAttributes {
   id: number;
-  routineId: number;
+  workoutTemplateId: number;
   exerciseId: number;
   orden: number;
   repeticiones: number;
@@ -16,14 +16,14 @@ export interface RoutineSetAttributes {
   updatedAt?: Date;
 }
 
-type RoutineSetCreationAttributes = Optional<
-  RoutineSetAttributes,
+type WorkoutTemplateExerciseCreationAttributes = Optional<
+  WorkoutTemplateExerciseAttributes,
   'id' | 'peso' | 'createdAt' | 'updatedAt'
 >;
 
-export class RoutineSet extends Model<RoutineSetAttributes, RoutineSetCreationAttributes> implements RoutineSetAttributes {
+export class WorkoutTemplateExercise extends Model<WorkoutTemplateExerciseAttributes, WorkoutTemplateExerciseCreationAttributes> implements WorkoutTemplateExerciseAttributes {
   public id!: number;
-  public routineId!: number;
+  public workoutTemplateId!: number;
   public exerciseId!: number;
   public orden!: number;
   public repeticiones!: number;
@@ -32,19 +32,19 @@ export class RoutineSet extends Model<RoutineSetAttributes, RoutineSetCreationAt
   public readonly updatedAt!: Date;
 }
 
-export function initRoutineSetModel(sequelize: Sequelize): typeof RoutineSet {
-  RoutineSet.init(
+export function initWorkoutTemplateExerciseModel(sequelize: Sequelize): typeof WorkoutTemplateExercise {
+  WorkoutTemplateExercise.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      routineId: {
+      workoutTemplateId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'routines',
+          model: 'workout_templates',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -75,10 +75,10 @@ export function initRoutineSetModel(sequelize: Sequelize): typeof RoutineSet {
     },
     {
       sequelize,
-      tableName: 'routine_sets',
+      tableName: 'workout_template_exercises',
       timestamps: true
     }
   );
 
-  return RoutineSet;
+  return WorkoutTemplateExercise;
 }
