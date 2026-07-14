@@ -1,5 +1,11 @@
 const request = require('supertest');
+const jwt = require('jsonwebtoken');
 const app = require('../dist/app').default;
+
+const token = jwt.sign(
+  { id: 1, email: 'test@example.com' },
+  process.env.JWT_SECRET || 'secret_por_defecto'
+);
 
 describe('API base', () => {
   test('GET /health responde ok', async () => {
@@ -56,5 +62,63 @@ describe('API base', () => {
     expect(response.body.error).toBe('Datos invalidos');
     expect(Array.isArray(response.body.details)).toBe(true);
     expect(response.body.details.length).toBeGreaterThan(0);
+  });
+
+  test('id invalido en ruta protegida devuelve 400', async () => {
+    const response = await request(app)
+      .get('/api/workouts/abc')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
+
+  test('training program invalido devuelve 400 antes de consultar la base', async () => {
+    const response = await request(app)
+      .post('/api/training-programs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ nombre: '' })
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
+
+  test('program weeks exige trainingProgramId en query', async () => {
+    const response = await request(app)
+      .get('/api/program-weeks')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
+
+  test('scheduled workout invalido devuelve 400 antes de consultar la base', async () => {
+    const response = await request(app)
+      .post('/api/scheduled-workouts')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        programWeekId: 1,
+        workoutTemplateId: 1,
+        nombre: 'Dia 1',
+        orden: 1,
+        diaSemana: 8
+      })
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+  });
+
+  test('exercise invalido devuelve 400 antes de consultar la base', async () => {
+    const response = await request(app)
+      .post('/api/exercises')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        nombre: 'Sentadilla',
+        dificultad: 'dificil',
+        muscleGroupIds: ['piernas']
+      })
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
   });
 });

@@ -671,6 +671,7 @@ Implementado:
 - semanas de programa
 - entrenamientos programados
 - vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
+- validaciones de entrada en rutas principales
 - tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
 
 Pendiente para completar la entrega final:
