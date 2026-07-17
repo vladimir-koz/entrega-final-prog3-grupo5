@@ -4,13 +4,15 @@ export interface WorkoutSetAttributes {
   id: number;
   repeticiones: number;
   peso: number;
+  rir?: number | null;
+  rpe?: number | null;
   exerciseId: number;
   workoutId: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-type WorkoutSetCreationAttributes = Optional<WorkoutSetAttributes, 'id' | 'createdAt' | 'updatedAt'>;
+type WorkoutSetCreationAttributes = Optional<WorkoutSetAttributes, 'id' | 'rir' | 'rpe' | 'createdAt' | 'updatedAt'>;
 
 export class WorkoutSet
   extends Model<WorkoutSetAttributes, WorkoutSetCreationAttributes>
@@ -18,6 +20,8 @@ export class WorkoutSet
   public id!: number;
   public repeticiones!: number;
   public peso!: number;
+  public rir!: number | null;
+  public rpe!: number | null;
   public exerciseId!: number;
   public workoutId!: number;
   public readonly createdAt!: Date;
@@ -44,6 +48,22 @@ export function initWorkoutSetModel(sequelize: Sequelize): typeof WorkoutSet {
         allowNull: false,
         validate: {
           min: 0
+        }
+      },
+      rir: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+          min: 0,
+          max: 10
+        }
+      },
+      rpe: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        validate: {
+          min: 1,
+          max: 10
         }
       },
       exerciseId: {

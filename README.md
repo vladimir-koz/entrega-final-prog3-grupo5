@@ -109,6 +109,12 @@ npm run seed
 Carga datos iniciales con los seeders.
 
 ```bash
+npm test
+```
+
+Compila el backend y ejecuta los tests automatizados con Jest.
+
+```bash
 npm run start:migrate
 ```
 
@@ -124,18 +130,23 @@ Ejecuta migraciones, seeders y luego inicia el servidor. Es el comando usado por
 
 El backend usa migraciones de Sequelize para crear y actualizar el esquema de PostgreSQL.
 
-Actualmente el esquema inicial esta consolidado en una unica migracion:
+El esquema base esta consolidado en una unica migracion inicial:
 
 ```txt
 backend/migrations/20260622000000-create-training-schema.js
 ```
 
+Si una base ya tenia migraciones anteriores aplicadas, hay que resetearla o recrearla antes de usar esta version consolidada.
+
 Tablas actuales:
 
 - `users`
 - `exercises`
-- `routines`
-- `routine_sets`
+- `workout_templates`
+- `workout_template_exercises`
+- `training_programs`
+- `program_weeks`
+- `scheduled_workouts`
 - `muscle_groups`
 - `exercise_muscle_groups`
 - `workouts`
@@ -146,7 +157,8 @@ Los datos iniciales se cargan con seeders:
 ```txt
 backend/seeders/20260622010000-seed-muscle-groups.js
 backend/seeders/20260622020000-seed-exercises.js
-backend/seeders/20260622030000-seed-routines.js
+backend/seeders/20260622030000-seed-workout-templates.js
+backend/seeders/20260714010000-seed-training-programs.js
 ```
 
 Datos precargados:
@@ -154,8 +166,10 @@ Datos precargados:
 - 10 grupos musculares globales
 - 12 ejercicios globales
 - relaciones entre ejercicios y grupos musculares
-- 3 rutinas globales
-- 12 series planificadas de rutina
+- 3 plantillas de entrenamiento globales
+- 12 ejercicios planificados dentro de plantillas
+- 1 programa de entrenamiento global de 4 semanas
+- 12 entrenamientos programados dentro del programa global
 
 Para reiniciar la base local desde cero con Docker:
 
@@ -201,7 +215,8 @@ Reglas de escritura:
 Actualmente aplica a:
 
 - ejercicios
-- rutinas
+- plantillas de entrenamiento
+- programas de entrenamiento
 - grupos musculares
 
 ## Endpoints de la API
@@ -292,14 +307,14 @@ Body para crear:
 }
 ```
 
-### Routines
+### WorkoutTemplates
 
 ```http
-GET    /api/routines
-GET    /api/routines/:id
-POST   /api/routines
-PUT    /api/routines/:id
-DELETE /api/routines/:id
+GET    /api/workout-templates
+GET    /api/workout-templates/:id
+POST   /api/workout-templates
+PUT    /api/workout-templates/:id
+DELETE /api/workout-templates/:id
 ```
 
 Body para crear:
@@ -307,7 +322,7 @@ Body para crear:
 ```json
 {
   "nombre": "Fuerza tren inferior",
-  "descripcion": "Rutina enfocada en fuerza para tren inferior",
+  "descripcion": "Plantilla enfocada en fuerza para tren inferior",
   "tipo": "Fuerza",
   "grupoMuscularEtiqueta": "Piernas",
   "dificultad": "intermedio",
@@ -315,29 +330,110 @@ Body para crear:
 }
 ```
 
-### Routine Sets
+### WorkoutTemplate Exercises
 
 ```http
-GET    /api/routine-sets?routineId=1
-GET    /api/routine-sets/:id
-POST   /api/routine-sets
-PUT    /api/routine-sets/:id
-DELETE /api/routine-sets/:id
+GET    /api/workout-template-exercises?workoutTemplateId=1
+GET    /api/workout-template-exercises/:id
+POST   /api/workout-template-exercises
+PUT    /api/workout-template-exercises/:id
+DELETE /api/workout-template-exercises/:id
 ```
 
 Body para crear:
 
 ```json
 {
-  "routineId": 1,
+  "workoutTemplateId": 1,
   "exerciseId": 2,
   "orden": 1,
   "repeticiones": 10,
-  "peso": 80
+  "peso": 80,
+  "rirObjetivo": 2,
+  "rpeObjetivo": 8
 }
 ```
 
-`RoutineSet` representa el trabajo planificado dentro de una rutina.
+`WorkoutTemplateExercise` representa un ejercicio planificado dentro de una plantilla de entrenamiento.
+
+`rirObjetivo` y `rpeObjetivo` son opcionales y sirven para indicar la intensidad objetivo de ese ejercicio planificado.
+
+
+### Training Programs
+
+```http
+GET    /api/training-programs
+GET    /api/training-programs/:id
+POST   /api/training-programs
+PUT    /api/training-programs/:id
+DELETE /api/training-programs/:id
+```
+
+Body para crear:
+
+```json
+{
+  "nombre": "Hipertrofia 6 semanas",
+  "descripcion": "Plan orientado a ganar masa muscular",
+  "objetivo": "Hipertrofia",
+  "fechaInicio": "2026-07-14T00:00:00.000Z",
+  "fechaFin": "2026-08-25T00:00:00.000Z",
+  "estado": "activo"
+}
+```
+
+`TrainingProgram` representa un plan completo. Puede tener varias semanas.
+
+### Program Weeks
+
+```http
+GET    /api/program-weeks?trainingProgramId=1
+GET    /api/program-weeks/:id
+POST   /api/program-weeks
+PUT    /api/program-weeks/:id
+DELETE /api/program-weeks/:id
+```
+
+Body para crear:
+
+```json
+{
+  "trainingProgramId": 1,
+  "numeroSemana": 1,
+  "nombre": "Semana 1",
+  "objetivo": "Adaptacion",
+  "notas": "Cuidar tecnica y no llegar al fallo",
+  "esDescarga": false
+}
+```
+
+`ProgramWeek` representa una semana dentro de un programa. `esDescarga` permite marcar una semana liviana o de descarga.
+
+### Scheduled Workouts
+
+```http
+GET    /api/scheduled-workouts?programWeekId=1
+GET    /api/scheduled-workouts/:id
+POST   /api/scheduled-workouts
+PUT    /api/scheduled-workouts/:id
+DELETE /api/scheduled-workouts/:id
+```
+
+Body para crear:
+
+```json
+{
+  "programWeekId": 1,
+  "workoutTemplateId": 1,
+  "nombre": "Dia 1 - Push",
+  "diaSemana": 1,
+  "fechaProgramada": "2026-07-14T00:00:00.000Z",
+  "orden": 1,
+  "notas": "Entrenamiento principal de empuje"
+}
+```
+
+`ScheduledWorkout` representa un entrenamiento planificado dentro de una semana y apunta a una `WorkoutTemplate`.
 
 ### Workouts
 
@@ -356,11 +452,15 @@ Body para crear:
   "nombre": "Entrenamiento lunes",
   "timestamp": "2026-06-22T12:00:00.000Z",
   "grupoMuscularEtiqueta": "Piernas",
+  "workoutTemplateId": 3,
+  "scheduledWorkoutId": 3,
   "series": [
     {
       "exerciseId": 1,
       "repeticiones": 12,
-      "peso": 40
+      "peso": 40,
+      "rir": 2,
+      "rpe": 8
     }
   ]
 }
@@ -368,18 +468,114 @@ Body para crear:
 
 `Workout` representa un entrenamiento realizado. `WorkoutSet` representa las series reales registradas dentro de ese entrenamiento.
 
+`rir` y `rpe` son opcionales en cada serie real. Sirven para guardar que tan exigente fue esa serie.
+
+`workoutTemplateId` y `scheduledWorkoutId` son opcionales:
+
+- si no se envian, el entrenamiento queda como registro libre;
+- si se envia `workoutTemplateId`, el entrenamiento queda asociado a una plantilla;
+- si se envia `scheduledWorkoutId`, el entrenamiento queda asociado a un entrenamiento programado y el backend completa la plantilla correspondiente.
+
+### Metrics
+
+```http
+GET /api/metrics/summary
+GET /api/metrics/activity-heatmap
+GET /api/metrics/exercise-progress?exerciseId=1
+```
+
+Las tres rutas aceptan filtros opcionales por fecha:
+
+```http
+?from=2026-07-01T00:00:00.000Z&to=2026-07-31T23:59:59.999Z
+```
+
+`GET /api/metrics/summary` devuelve un resumen general para tarjetas del dashboard:
+
+```json
+{
+  "summary": {
+    "workouts": 8,
+    "completedScheduledWorkouts": 5,
+    "freeWorkouts": 3,
+    "totalSets": 42,
+    "totalRepetitions": 380,
+    "totalVolume": 15400,
+    "averageSetsPerWorkout": 5.25,
+    "averageRpe": 8,
+    "averageRir": 2,
+    "range": {
+      "from": "2026-07-01T00:00:00.000Z",
+      "to": "2026-07-31T23:59:59.999Z"
+    }
+  }
+}
+```
+
+`GET /api/metrics/activity-heatmap` devuelve actividad agrupada por dia. Sirve para un grafico tipo GitHub:
+
+```json
+{
+  "activity": [
+    {
+      "date": "2026-07-14",
+      "workoutCount": 1,
+      "completedScheduledWorkouts": 1,
+      "setCount": 5,
+      "totalVolume": 1800,
+      "intensityLevel": 3
+    }
+  ]
+}
+```
+
+`GET /api/metrics/exercise-progress?exerciseId=1` devuelve evolucion por ejercicio. Sirve para graficos de progreso con Chart.js:
+
+```json
+{
+  "exercise": {
+    "id": 1,
+    "nombre": "Press banca"
+  },
+  "progress": [
+    {
+      "date": "2026-07-14T17:52:45.617Z",
+      "workoutId": 2,
+      "workoutName": "Full body con intensidad",
+      "setCount": 3,
+      "maxWeight": 60,
+      "maxRepetitions": 10,
+      "totalVolume": 1500,
+      "estimatedOneRepMax": 80,
+      "averageRpe": 8,
+      "averageRir": 2
+    }
+  ]
+}
+```
+
 ## Modelo de Dominio
 
-Modelo implementado actualmente:
+### Primera entrega
+
+En la primera entrega se implemento un modelo base para registrar usuarios, ejercicios, grupos musculares, plantillas de entrenamiento y entrenamientos realizados. En la segunda version se agrego una capa de planificacion con programas, semanas y entrenamientos programados.
+
+El modelo actual queda asi:
 
 ```txt
 User 1 --- N Exercise
-User 1 --- N Routine
+User 1 --- N WorkoutTemplate
 User 1 --- N MuscleGroup
-Routine 1 --- N RoutineSet
-Exercise 1 --- N RoutineSet
+WorkoutTemplate 1 --- N WorkoutTemplateExercise
+Exercise 1 --- N WorkoutTemplateExercise
 Exercise N --- N MuscleGroup
+User 1 --- N TrainingProgram
+TrainingProgram 1 --- N ProgramWeek
+ProgramWeek 1 --- N ScheduledWorkout
+ScheduledWorkout N --- 1 WorkoutTemplate
 User 1 --- N Workout
+Workout N --- 1 WorkoutTemplate opcional
+Workout N --- 1 ScheduledWorkout opcional
 Workout 1 --- N WorkoutSet
 Exercise 1 --- N WorkoutSet
 ```
@@ -389,6 +585,112 @@ La relacion `Exercise N --- N MuscleGroup` se implementa con:
 ```txt
 exercise_muscle_groups
 ```
+
+`WorkoutTemplate` funciona como una sesion o plantilla simple de entrenamiento. Por ejemplo, una plantilla "Full body" puede tener sentadilla, flexiones y remo con sus repeticiones planificadas.
+
+La capa nueva de planificacion permite agrupar esas plantillas en programas de varias semanas.
+
+### Ampliacion para la entrega final
+
+Para la entrega final se separa la planificacion de la ejecucion real del entrenamiento.
+
+El modelo de planificacion agrega estas entidades:
+
+```txt
+TrainingProgram
+ProgramWeek
+ScheduledWorkout
+WorkoutTemplate
+WorkoutTemplateExercise
+Workout
+WorkoutSet
+```
+
+Conceptualmente:
+
+- `TrainingProgram`: plan completo de entrenamiento, por ejemplo "Hipertrofia 6 semanas".
+- `ProgramWeek`: semana dentro del programa, por ejemplo "Semana 4 - descarga".
+- `ScheduledWorkout`: entrenamiento programado dentro de una semana, por ejemplo "Dia 1 - Push".
+- `WorkoutTemplate`: plantilla de entrenamiento, por ejemplo "Push basico".
+- `WorkoutTemplateExercise`: ejercicio planificado dentro de una plantilla.
+- `Workout`: entrenamiento real realizado por el usuario.
+- `WorkoutSet`: serie real realizada dentro de un entrenamiento.
+
+Relaciones actuales de planificacion:
+
+```txt
+User 1 --- N TrainingProgram
+TrainingProgram 1 --- N ProgramWeek
+ProgramWeek 1 --- N ScheduledWorkout
+ScheduledWorkout N --- 1 WorkoutTemplate
+WorkoutTemplate 1 --- N WorkoutTemplateExercise
+WorkoutTemplateExercise N --- 1 Exercise
+User 1 --- N Workout
+Workout N --- 1 WorkoutTemplate opcional
+Workout N --- 1 ScheduledWorkout opcional
+Workout 1 --- N WorkoutSet
+WorkoutSet N --- 1 Exercise
+```
+
+Con esta ampliacion se cubren varios casos de uso:
+
+- usuarios recreativos que registran entrenamientos libres;
+- usuarios que repiten siempre una misma plantilla;
+- plantillas de entrenamiento semanales simples;
+- programas de varias semanas;
+- semanas de descarga;
+- semanas de descanso;
+- entrenamientos movidos de dia sin romper la planificacion;
+- comparacion entre lo planificado y lo realizado.
+
+Ejemplo:
+
+```txt
+TrainingProgram: Hipertrofia 6 semanas
+ProgramWeek: Semana 1
+ScheduledWorkout: Dia 1 - Push
+WorkoutTemplate: Push basico
+WorkoutTemplateExercise: Press banca 4 series de 8 a 10 reps
+Workout: Push realizado el miercoles
+WorkoutSet: Press banca serie 1, 8 reps, 60 kg
+```
+
+### RPE y RIR
+
+La API permite registrar esfuerzo percibido en las series. No es obligatorio para usar la app: sirve como dato adicional para usuarios que quieran controlar mejor la intensidad.
+
+`RPE` significa `Rate of Perceived Exertion`, es decir, esfuerzo percibido.
+
+`RIR` significa `Reps In Reserve`, es decir, repeticiones en reserva.
+
+Equivalencia aproximada:
+
+```txt
+RPE 10 = RIR 0 = no quedaba ninguna repeticion mas
+RPE 9  = RIR 1 = quedaba 1 repeticion mas
+RPE 8  = RIR 2 = quedaban 2 repeticiones mas
+RPE 7  = RIR 3 = quedaban 3 repeticiones mas
+```
+
+Ejemplo practico:
+
+```txt
+Press banca
+4 series
+8 a 10 repeticiones
+RIR objetivo: 2
+```
+
+Eso significa que el usuario debe elegir un peso que le permita hacer entre 8 y 10 repeticiones dejando aproximadamente 2 repeticiones en reserva.
+
+En una plantilla se puede guardar el objetivo con `rirObjetivo` / `rpeObjetivo`, y en el entrenamiento real se puede guardar lo que paso con `rir` / `rpe`:
+
+```txt
+Objetivo: 8-10 reps con RIR 2
+Real: 9 reps, 60 kg, RIR 2
+```
+
+Esto permite analizar si el entrenamiento fue muy liviano, adecuado o demasiado exigente.
 
 ## Deploy en Render
 
@@ -436,20 +738,35 @@ Implementado:
 - autenticacion JWT
 - usuarios
 - ejercicios
-- rutinas
-- series planificadas de rutina
+- plantillas de entrenamiento como sesiones simples de entrenamiento
+- ejercicios planificados dentro de plantillas
 - grupos musculares
 - relacion ejercicio-grupo muscular
-- entrenamientos
+- entrenamientos realizados
 - series reales de entrenamiento
+- programas de entrenamiento de varias semanas
+- semanas de programa
+- entrenamientos programados
+- vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
+- validaciones de entrada en rutas principales
+- tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
+- metricas de resumen, heatmap de actividad y progreso por ejercicio
 
+Pendiente para completar la entrega final:
+
+- visualizaciones en frontend usando las metricas disponibles.
+
+## Documentacion Postman
+
+<<<<<<< HEAD
 ##Documentacion postman:
+=======
+>>>>>>> origin/dev
 https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
 
 Pendiente:
 
-- tests de integracion
-- coleccion de Postman
+- tests de integracion con base de datos
 - integracion con frontend
 
 ## Tecnologías utilizadas

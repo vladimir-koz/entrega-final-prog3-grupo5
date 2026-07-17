@@ -3,8 +3,11 @@ import databaseConfig from '../config/database';
 import { Exercise, initExerciseModel } from './Exercise';
 import { ExerciseMuscleGroup, initExerciseMuscleGroupModel } from './ExerciseMuscleGroup';
 import { initMuscleGroupModel, MuscleGroup } from './MuscleGroup';
-import { initRoutineModel, Routine } from './Routine';
-import { initRoutineSetModel, RoutineSet } from './RoutineSet';
+import { initWorkoutTemplateModel, WorkoutTemplate } from './WorkoutTemplate';
+import { initWorkoutTemplateExerciseModel, WorkoutTemplateExercise } from './WorkoutTemplateExercise';
+import { initProgramWeekModel, ProgramWeek } from './ProgramWeek';
+import { initScheduledWorkoutModel, ScheduledWorkout } from './ScheduledWorkout';
+import { initTrainingProgramModel, TrainingProgram } from './TrainingProgram';
 import { initUserModel, User } from './User';
 import { initWorkoutModel, Workout } from './Workout';
 import { initWorkoutSetModel, WorkoutSet } from './WorkoutSet';
@@ -36,20 +39,23 @@ initUserModel(sequelize);
 initExerciseModel(sequelize);
 initMuscleGroupModel(sequelize);
 initExerciseMuscleGroupModel(sequelize);
-initRoutineModel(sequelize);
-initRoutineSetModel(sequelize);
+initWorkoutTemplateModel(sequelize);
+initWorkoutTemplateExerciseModel(sequelize);
+initTrainingProgramModel(sequelize);
+initProgramWeekModel(sequelize);
+initScheduledWorkoutModel(sequelize);
 initWorkoutModel(sequelize);
 initWorkoutSetModel(sequelize);
 
-User.hasMany(Routine, {
+User.hasMany(WorkoutTemplate, {
   foreignKey: 'userId',
-  as: 'routines'
+  as: 'workoutTemplates'
 });
 
 User.hasMany(Workout, { foreignKey: 'userId', as: 'workouts' });
 Workout.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 
-Routine.belongsTo(User, {
+WorkoutTemplate.belongsTo(User, {
   foreignKey: 'userId',
   as: 'user'
 });
@@ -108,24 +114,86 @@ ExerciseMuscleGroup.belongsTo(MuscleGroup, {
   as: 'muscleGroup'
 });
 
-Routine.hasMany(RoutineSet, {
-  foreignKey: 'routineId',
-  as: 'routineSets'
+WorkoutTemplate.hasMany(WorkoutTemplateExercise, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplateExercises'
 });
 
-RoutineSet.belongsTo(Routine, {
-  foreignKey: 'routineId',
-  as: 'routine'
+WorkoutTemplateExercise.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
 });
 
-Exercise.hasMany(RoutineSet, {
+Exercise.hasMany(WorkoutTemplateExercise, {
   foreignKey: 'exerciseId',
-  as: 'routineSets'
+  as: 'workoutTemplateExercises'
 });
 
-RoutineSet.belongsTo(Exercise, {
+WorkoutTemplateExercise.belongsTo(Exercise, {
   foreignKey: 'exerciseId',
   as: 'exercise'
+});
+
+User.hasMany(TrainingProgram, {
+  foreignKey: 'userId',
+  as: 'trainingPrograms'
+});
+
+TrainingProgram.belongsTo(User, {
+  foreignKey: 'userId',
+  as: 'user'
+});
+
+TrainingProgram.hasMany(ProgramWeek, {
+  foreignKey: 'trainingProgramId',
+  as: 'weeks',
+  onDelete: 'CASCADE'
+});
+
+ProgramWeek.belongsTo(TrainingProgram, {
+  foreignKey: 'trainingProgramId',
+  as: 'trainingProgram'
+});
+
+ProgramWeek.hasMany(ScheduledWorkout, {
+  foreignKey: 'programWeekId',
+  as: 'scheduledWorkouts',
+  onDelete: 'CASCADE'
+});
+
+ScheduledWorkout.belongsTo(ProgramWeek, {
+  foreignKey: 'programWeekId',
+  as: 'programWeek'
+});
+
+WorkoutTemplate.hasMany(ScheduledWorkout, {
+  foreignKey: 'workoutTemplateId',
+  as: 'scheduledWorkouts'
+});
+
+ScheduledWorkout.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
+});
+
+WorkoutTemplate.hasMany(Workout, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workouts'
+});
+
+Workout.belongsTo(WorkoutTemplate, {
+  foreignKey: 'workoutTemplateId',
+  as: 'workoutTemplate'
+});
+
+ScheduledWorkout.hasMany(Workout, {
+  foreignKey: 'scheduledWorkoutId',
+  as: 'workouts'
+});
+
+Workout.belongsTo(ScheduledWorkout, {
+  foreignKey: 'scheduledWorkoutId',
+  as: 'scheduledWorkout'
 });
 
 Workout.hasMany(WorkoutSet, {
@@ -144,8 +212,11 @@ export {
   Exercise,
   ExerciseMuscleGroup,
   MuscleGroup,
-  Routine,
-  RoutineSet,
+  WorkoutTemplate,
+  WorkoutTemplateExercise,
+  TrainingProgram,
+  ProgramWeek,
+  ScheduledWorkout,
   Workout,
   WorkoutSet
 };

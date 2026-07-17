@@ -5,46 +5,50 @@ import {
   Sequelize
 } from 'sequelize';
 
-export interface RoutineSetAttributes {
+export interface WorkoutTemplateExerciseAttributes {
   id: number;
-  routineId: number;
+  workoutTemplateId: number;
   exerciseId: number;
   orden: number;
   repeticiones: number;
   peso?: number | null;
+  rirObjetivo?: number | null;
+  rpeObjetivo?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-type RoutineSetCreationAttributes = Optional<
-  RoutineSetAttributes,
-  'id' | 'peso' | 'createdAt' | 'updatedAt'
+type WorkoutTemplateExerciseCreationAttributes = Optional<
+  WorkoutTemplateExerciseAttributes,
+  'id' | 'peso' | 'rirObjetivo' | 'rpeObjetivo' | 'createdAt' | 'updatedAt'
 >;
 
-export class RoutineSet extends Model<RoutineSetAttributes, RoutineSetCreationAttributes> implements RoutineSetAttributes {
+export class WorkoutTemplateExercise extends Model<WorkoutTemplateExerciseAttributes, WorkoutTemplateExerciseCreationAttributes> implements WorkoutTemplateExerciseAttributes {
   public id!: number;
-  public routineId!: number;
+  public workoutTemplateId!: number;
   public exerciseId!: number;
   public orden!: number;
   public repeticiones!: number;
   public peso!: number | null;
+  public rirObjetivo!: number | null;
+  public rpeObjetivo!: number | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-export function initRoutineSetModel(sequelize: Sequelize): typeof RoutineSet {
-  RoutineSet.init(
+export function initWorkoutTemplateExerciseModel(sequelize: Sequelize): typeof WorkoutTemplateExercise {
+  WorkoutTemplateExercise.init(
     {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
       },
-      routineId: {
+      workoutTemplateId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: 'routines',
+          model: 'workout_templates',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -71,14 +75,30 @@ export function initRoutineSetModel(sequelize: Sequelize): typeof RoutineSet {
       peso: {
         type: DataTypes.FLOAT,
         allowNull: true
+      },
+      rirObjetivo: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        validate: {
+          min: 0,
+          max: 10
+        }
+      },
+      rpeObjetivo: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+        validate: {
+          min: 1,
+          max: 10
+        }
       }
     },
     {
       sequelize,
-      tableName: 'routine_sets',
+      tableName: 'workout_template_exercises',
       timestamps: true
     }
   );
 
-  return RoutineSet;
+  return WorkoutTemplateExercise;
 }

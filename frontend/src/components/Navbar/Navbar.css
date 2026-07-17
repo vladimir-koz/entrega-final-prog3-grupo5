@@ -10,9 +10,25 @@
     padding:0 40px;
 }
 
-.navbar h2{
+.logo{
     color:white;
     letter-spacing:4px;
+}
+
+.user-section{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.user-name{
+    color:white;
+    font-size:15px;
+    font-weight:600;
+    padding:10px 18px;
+    border:1px solid #1f1f1f;
+    border-radius:15px;
+    background:#111;
 }
 
 .navbar button{

@@ -1,4 +1,4 @@
-import Layout from "../components/Layout/Layout";
+import Layout from "../components/Layout/layout";
 import HeroBanner from "../components/HeroBanner/HeroBanner";
 import StatsCards from "../components/StatsCards/StatsCards";
 import WeeklyActivity from "../components/WeeklyActivity/WeeklyActivity";

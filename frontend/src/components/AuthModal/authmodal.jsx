@@ -12,7 +12,6 @@ function AuthModal({ open, onClose }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
-
         <button
           className="close-btn"
           onClick={onClose}
@@ -39,11 +38,14 @@ function AuthModal({ open, onClose }) {
         </div>
 
         {isLogin ? (
-          <LoginForm />
+          <LoginForm onLoginSuccess={onClose} />
         ) : (
-          <RegisterForm />
+          <RegisterForm
+            onRegisterSuccess={() => {
+              setIsLogin(true);
+            }}
+          />
         )}
-
       </div>
     </div>
   );

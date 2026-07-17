@@ -6,13 +6,15 @@ export interface WorkoutAttributes {
   nombre: string;
   userId: number;
   grupoMuscularEtiqueta?: string | null;
+  workoutTemplateId?: number | null;
+  scheduledWorkoutId?: number | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 type WorkoutCreationAttributes = Optional<
   WorkoutAttributes,
-  'id' | 'timestamp' | 'grupoMuscularEtiqueta' | 'createdAt' | 'updatedAt'
+  'id' | 'timestamp' | 'grupoMuscularEtiqueta' | 'workoutTemplateId' | 'scheduledWorkoutId' | 'createdAt' | 'updatedAt'
 >;
 
 export class Workout extends Model<WorkoutAttributes, WorkoutCreationAttributes>
@@ -22,6 +24,8 @@ export class Workout extends Model<WorkoutAttributes, WorkoutCreationAttributes>
   public nombre!: string;
   public userId!: number;
   public grupoMuscularEtiqueta!: string | null;
+  public workoutTemplateId!: number | null;
+  public scheduledWorkoutId!: number | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -54,6 +58,26 @@ export function initWorkoutModel(sequelize: Sequelize): typeof Workout {
       grupoMuscularEtiqueta: {
         type: DataTypes.STRING,
         allowNull: true
+      },
+      workoutTemplateId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'workout_templates',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
+      },
+      scheduledWorkoutId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'scheduled_workouts',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
       }
     },
     {
