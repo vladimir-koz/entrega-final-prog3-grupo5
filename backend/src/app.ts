@@ -18,7 +18,7 @@ app.use(express.json());
 app.get('/health', (_req: Request, res: Response) => {
     res.json({
         status: 'ok',
-        message: 'Backend running',
+        message: 'Backend funcionando',
     });
 });
 

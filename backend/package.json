@@ -8,6 +8,7 @@
     "dev:debug": "ts-node-dev --respawn --transpile-only --inspect=0.0.0.0:9229 src/server.ts",
     "build": "tsc",
     "start:migrate": "npm run migrate && npm start",
+    "start:migrate:seed": "npm run migrate && npm run seed && npm start",
     "start": "node dist/server.js",
     "migrate": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all",
@@ -22,6 +23,7 @@
     "express-validator": "^7.0.1",
     "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.1",
+    "migrate": "^2.1.0",
     "morgan": "^1.11.0",
     "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
@@ -48,6 +50,6 @@
     "postgresql",
     "api"
   ],
-  "author": "Tu Nombre",
+  "author": "grupo 5",
   "license": "MIT"
 }

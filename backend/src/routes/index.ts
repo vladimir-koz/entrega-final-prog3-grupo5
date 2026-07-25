@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import exerciseRoutes from './exercise.routes';
+import muscleGroupRoutes from './muscleGroup.routes';
 import routineRoutes from './routine.routes';
 import routineSetRoutes from './routineSet.routes';
+import workoutRoutes from './workout.routes';
 
 const router = Router();
 
@@ -17,7 +19,10 @@ router.get('/health', (_req, res) => {
 
 router.use('/auth', authRoutes);
 router.use('/exercises', exerciseRoutes);
+router.use('/muscle-groups', muscleGroupRoutes);
 router.use('/routines', routineRoutes);
 router.use('/routine-sets', routineSetRoutes);
+router.use('/workouts', workoutRoutes);
+
 
 export default router;

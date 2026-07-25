@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Exercise } from '../models';
+import { Exercise, MuscleGroup } from '../models';
 import { ExerciseDifficulty } from '../models/Exercise';
 
 export interface ExerciseCreateData {
@@ -10,11 +10,25 @@ export interface ExerciseCreateData {
   userId?: number | null;
 }
 
+const visibleExerciseWhere = (userId: number) => ({
+  [Op.or]: [
+    { userId: null },
+    { userId }
+  ]
+});
+
 export async function findExercises(userId: number) {
   return Exercise.findAll({
     where: {
       [Op.or]: [{ userId: null }, { userId }]
     },
+    include: [
+      {
+        model: MuscleGroup,
+        as: 'muscleGroups',
+        through: { attributes: [] }
+      }
+    ],
     order: [['nombre', 'ASC']]
   });
 }
@@ -24,7 +38,14 @@ export async function findExerciseById(id: number, userId: number) {
     where: {
       id,
       [Op.or]: [{ userId: null }, { userId }]
-    }
+    },
+    include: [
+      {
+        model: MuscleGroup,
+        as: 'muscleGroups',
+        through: { attributes: [] }
+      }
+    ]
   });
 }
 
@@ -40,6 +61,17 @@ export async function updateExercise(id: number, data: Partial<ExerciseCreateDat
   }
 
   return exercise.update(data);
+}
+
+export function countExercisesByIdsForUser(userId: number, ids: number[]): Promise<number> {
+  return Exercise.count({
+    where: {
+      id: {
+        [Op.in]: ids
+      },
+      ...visibleExerciseWhere(userId)
+    }
+  });
 }
 
 export async function deleteExercise(id: number, userId: number) {
