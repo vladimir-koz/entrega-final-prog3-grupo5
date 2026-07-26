@@ -19,6 +19,9 @@
     cursor:pointer;
 
     transition:.3s;
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .sidebar a:hover{
@@ -29,4 +32,10 @@
 .sidebar a.active{
     background:#c1121f;
     color:white;
+}
+
+@media (max-width: 800px) {
+    .sidebar { width: 76px; padding: 20px 10px; }
+    .sidebar a { justify-content: center; padding: 16px 10px; font-size: 0; border-radius: 7px; }
+    .sidebar a svg { width: 21px; height: 21px; }
 }

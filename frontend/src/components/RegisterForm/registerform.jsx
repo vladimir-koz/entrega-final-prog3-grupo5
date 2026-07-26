@@ -1,36 +1,36 @@
 import { useState } from "react";
-import { register } from "../../services/authService";
+import { useAuth } from "../../context/useAuth";
 import "./registerform.css";
 
 function RegisterForm({ onRegisterSuccess }) {
+  const { register } = useAuth();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Las contraseñas no coinciden");
+      setError("Las contraseñas no coinciden");
       return;
     }
 
+    setError("");
+    setSubmitting(true);
+
     try {
       await register(nombre, email, password);
-
-      setNombre("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-
-      alert("Usuario registrado correctamente");
-
       if (onRegisterSuccess) {
         onRegisterSuccess();
       }
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -64,8 +64,10 @@ function RegisterForm({ onRegisterSuccess }) {
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
 
-      <button className="login-btn" type="submit">
-        Registrarse
+      {error && <p className="form-error" role="alert">{error}</p>}
+
+      <button className="login-btn" type="submit" disabled={submitting}>
+        {submitting ? "Creando cuenta..." : "Registrarse"}
       </button>
     </form>
   );

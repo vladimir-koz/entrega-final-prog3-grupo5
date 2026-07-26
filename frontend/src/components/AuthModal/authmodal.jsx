@@ -4,20 +4,21 @@ import { useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
 import RegisterForm from "../RegisterForm/RegisterForm";
 
-function AuthModal({ open, onClose }) {
+function AuthModal({ open, onClose, embedded = false, onAuthenticated }) {
   const [isLogin, setIsLogin] = useState(true);
 
   if (!open) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className={embedded ? "auth-panel" : "modal-overlay"}>
       <div className="modal">
-        <button
+        {!embedded && <button
           className="close-btn"
           onClick={onClose}
+          aria-label="Cerrar"
         >
-          ✕
-        </button>
+          ×
+        </button>}
 
         <h2>PowerUp</h2>
 
@@ -38,12 +39,10 @@ function AuthModal({ open, onClose }) {
         </div>
 
         {isLogin ? (
-          <LoginForm onLoginSuccess={onClose} />
+          <LoginForm onLoginSuccess={onAuthenticated || onClose} />
         ) : (
           <RegisterForm
-            onRegisterSuccess={() => {
-              setIsLogin(true);
-            }}
+            onRegisterSuccess={onAuthenticated || onClose}
           />
         )}
       </div>
