@@ -590,6 +590,160 @@ Por lo tanto, cada despliegue aplica migraciones pendientes, ejecuta los seeders
 
 ### Frontend en Vercel
 
+## Estado Actual del Desarrollo
+
+Implementado:
+
+- configuracion Docker del backend
+- conexion con PostgreSQL
+- configuracion de Sequelize
+- autenticacion JWT
+- usuarios
+- ejercicios
+- plantillas de entrenamiento como sesiones simples de entrenamiento
+- ejercicios planificados dentro de plantillas
+- grupos musculares
+- relacion ejercicio-grupo muscular
+- entrenamientos realizados
+- series reales de entrenamiento
+- programas de entrenamiento de varias semanas
+- semanas de programa
+- entrenamientos programados
+- vinculacion entre entrenamientos reales (`Workout`) y planificacion (`WorkoutTemplate` / `ScheduledWorkout`)
+- validaciones de entrada en rutas principales
+- tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
+- metricas de resumen, heatmap de actividad y progreso por ejercicio
+- Filtros de ejercicios por grupo muscular
+
+Pendiente para completar la entrega final:
+
+- visualizaciones en frontend usando las metricas disponibles.
+
+## Documentacion Postman
+
+##Documentacion postman:
+
+
+Pendiente para completar la entrega final:
+
+- visualizaciones en frontend usando las metricas disponibles.
+
+## Documentacion Postman
+
+https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
+
+Pendiente:
+
+- tests de integracion con base de datos
+- integracion con frontend
+
+
+Este módulo permite realizar las operaciones básicas de un CRUD: listar, obtener por id, crear, editar y eliminar ejercicios.
+Permite obtener ejercicios precargados y ejercicios creados por el usuario. Para esto discrimina aquellos que no tengan id de usuario.
+
+Para esto se incorporó:
+
+Modelo Sequelize Exercise.
+Migración para crear la tabla exercises.
+Service con la lógica principal del CRUD.
+Controller para manejar las respuestas HTTP.
+Rutas REST bajo /api/exercises.
+Tipos TypeScript para los requests.
+Registro del modelo en Sequelize.
+Registro de las rutas en el router principal.
+Asociacion de ejercicios al usuario autenticado mediante userId.
+Endpoints disponibles
+GET /api/exercises
+GET /api/exercises/:id
+POST /api/exercises
+PUT /api/exercises/:id
+DELETE /api/exercises/:id
+Ejemplo de body para crear un ejercicio
+{
+  "nombre": "Sentadilla",
+  "descripcion": "Ejercicio basico de piernas",
+  "dificultad": "intermedio",
+  "imagen": "sentadilla.jpg"
+}
+Módulo de rutinas
+
+También se agregó el módulo de rutinas, pensado para que cada usuario pueda crear y administrar sus propias rutinas de entrenamiento.
+
+A diferencia del módulo de ejercicios, estas rutas están protegidas y requieren autenticación mediante token JWT. Esto permite asociar cada rutina al usuario correspondiente.
+
+Para este módulo se incorporó:
+
+Modelo Sequelize Routine.
+Migración para crear la tabla routines.
+Relación User hasMany Routine.
+Relación Routine belongsTo User.
+Service con la lógica principal del CRUD.
+Controller para manejar las respuestas HTTP.
+Rutas REST protegidas bajo /api/routines.
+Tipos TypeScript para los requests.
+Registro del modelo en Sequelize.
+Registro de las rutas en el router principal.
+Endpoints disponibles
+GET /api/routines
+GET /api/routines/:id
+POST /api/routines
+PUT /api/routines/:id
+DELETE /api/routines/:id
+Autenticación requerida
+
+Para utilizar estas rutas es necesario enviar el token JWT en el header de la request:
+
+Authorization: Bearer TOKEN
+Ejemplo de body para crear una rutina
+{
+  "nombre": "Rutina fuerza",
+  "descripcion": "Rutina de tren inferior",
+  "tipo": "Fuerza",
+  "grupoMuscularEtiqueta": "Piernas",
+  "dificultad": "intermedio",
+  "tiempoEstimado": 60
+}
+Verificación
+
+Se verificó que el backend compile correctamente y que las migraciones se ejecuten dentro del entorno Docker.
+
+Comandos utilizados:
+
+docker compose exec backend npm run build
+docker compose exec backend npm run migrate
+
+Además, se probaron los endpoints principales utilizando Invoke-RestMethod para comprobar que las rutas respondan correctamente y que el flujo básico de creación, consulta, edición y eliminación funcione como se esperaba
+
+
+## Tecnologías utilizadas
+
+### Frontend
+
+- React
+- Vite
+- React Router DOM
+- CSS3
+
+---
+
+## Funcionalidades implementadas
+
+### Dashboard
+
+- Navbar y Sidebar reutilizables.
+- Hero Banner con diseño fitness.
+- Tarjetas de estadísticas.
+- Navegación entre páginas mediante React Router.
+
+### Gestión de Rutinas
+
+- Vista "Mis rutinas".
+- Tabla de rutinas.
+- Estructura preparada para integración con el backend mediante Fetch API.
+
+---
+
+## Estructura del Frontend
 Importar el mismo repositorio y configurar:
 
 ```txt

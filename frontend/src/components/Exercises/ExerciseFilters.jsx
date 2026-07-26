@@ -1,6 +1,14 @@
 import { Search } from "lucide-react";
 
-function ExerciseFilters({ search, difficulty, onSearchChange, onDifficultyChange }) {
+function ExerciseFilters({
+  search,
+  difficulty,
+  groupId,
+  groups,
+  onSearchChange,
+  onDifficultyChange,
+  onGroupChange,
+}) {
   return (
     <div className="filter-bar">
       <label className="search-field">
@@ -20,6 +28,18 @@ function ExerciseFilters({ search, difficulty, onSearchChange, onDifficultyChang
         <option value="principiante">Principiante</option>
         <option value="intermedio">Intermedio</option>
         <option value="avanzado">Avanzado</option>
+      </select>
+      <select
+        aria-label="Filtrar grupo muscular"
+        value={groupId}
+        onChange={(event) => onGroupChange(event.target.value)}
+      >
+        <option value="">Todos los grupos</option>
+        {groups.map((group) => (
+          <option key={group.id} value={group.id}>
+            {group.nombre}
+          </option>
+        ))}
       </select>
     </div>
   );

@@ -16,13 +16,15 @@ export function exerciseToForm(exercise) {
   };
 }
 
-export function filterExercises(exercises, search, difficulty) {
+export function filterExercises(exercises, search, difficulty, groupId = "") {
   const normalizedSearch = search.trim().toLowerCase();
 
   return exercises.filter((exercise) => {
     const termMatch =
       exercise.nombre.toLowerCase().includes(normalizedSearch) ||
       (exercise.descripcion || "").toLowerCase().includes(normalizedSearch);
-    return termMatch && (!difficulty || exercise.dificultad === difficulty);
+    const groupMatch =
+      !groupId || exercise.muscleGroups?.some((group) => group.id === Number(groupId));
+    return termMatch && (!difficulty || exercise.dificultad === difficulty) && groupMatch;
   });
 }
