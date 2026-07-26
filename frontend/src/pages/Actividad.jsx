@@ -11,13 +11,18 @@ function Actividad() {
   const {
     exercises,
     routines,
-    todayWorkouts,
+    scheduledWorkouts,
+    recentWorkouts,
     formOpen,
     toggleForm,
     name,
     setName,
+    timestamp,
+    setTimestamp,
     routineId,
     selectRoutine,
+    scheduledWorkoutId,
+    selectScheduledWorkout,
     sets,
     setSets,
     error,
@@ -30,8 +35,8 @@ function Actividad() {
     <Layout>
       <PageHeader
         eyebrow="Actividad"
-        title="Entrenamiento de hoy"
-        description="Cargá una sesión libre o empezá desde una rutina."
+        title="Registrar entrenamiento"
+        description="Cargá una sesión libre, usá una rutina o completá lo programado."
         action={
           <button className="primary-button" onClick={toggleForm}>
             {formOpen ? <X size={18} /> : <ListPlus size={18} />}{" "}
@@ -44,6 +49,11 @@ function Actividad() {
         <WorkoutForm
           name={name}
           onNameChange={setName}
+          timestamp={timestamp}
+          onTimestampChange={setTimestamp}
+          scheduledWorkoutId={scheduledWorkoutId}
+          scheduledWorkouts={scheduledWorkouts}
+          onScheduledWorkoutChange={selectScheduledWorkout}
           routineId={routineId}
           routines={routines}
           onRoutineChange={selectRoutine}
@@ -54,7 +64,7 @@ function Actividad() {
           onSubmit={submitWorkout}
         />
       )}
-      <TodayWorkouts workouts={todayWorkouts} onDelete={removeWorkout} />
+      <TodayWorkouts workouts={recentWorkouts} onDelete={removeWorkout} />
     </Layout>
   );
 }

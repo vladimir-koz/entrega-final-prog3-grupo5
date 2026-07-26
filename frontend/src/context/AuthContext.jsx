@@ -1,7 +1,6 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { login as loginRequest, register as registerRequest } from "../services/authService";
-
-export const AuthContext = createContext(null);
+import { AuthContext } from "./authContext";
 
 function readStoredUser() {
   try {
