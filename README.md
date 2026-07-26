@@ -59,7 +59,7 @@ DB_USER=app_user
 DB_PASSWORD=app_password
 
 JWT_SECRET=cambiar_por_una_clave_larga
-CORS_ORIGIN=http://localhost:3000
+CORS_ORIGIN=http://localhost:5173
 ```
 
 Para Render:
