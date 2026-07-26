@@ -1,27 +1,29 @@
 import { useState } from "react";
-import { login } from "../../services/authService";
+import { useAuth } from "../../context/useAuth";
 import "./loginform.css";
 
 function LoginForm({ onLoginSuccess }) {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
 
+    setError("");
+    setSubmitting(true);
+
     try {
-      const data = await login(email, password);
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+      await login(email, password);
       if (onLoginSuccess) {
         onLoginSuccess();
       }
-
-      console.log(data);
     } catch (error) {
-      alert(error.message);
+      setError(error.message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -41,8 +43,14 @@ function LoginForm({ onLoginSuccess }) {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <button className="login-btn" type="submit">
-        Iniciar sesión
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
+
+      <button className="login-btn" type="submit" disabled={submitting}>
+        {submitting ? "Ingresando..." : "Iniciar sesión"}
       </button>
     </form>
   );

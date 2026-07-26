@@ -4,47 +4,36 @@ import { useState } from "react";
 import LoginForm from "../LoginForm/LoginForm";
 import RegisterForm from "../RegisterForm/RegisterForm";
 
-function AuthModal({ open, onClose }) {
+function AuthModal({ open, onClose, embedded = false, onAuthenticated }) {
   const [isLogin, setIsLogin] = useState(true);
 
   if (!open) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className={embedded ? "auth-panel" : "modal-overlay"}>
       <div className="modal">
-        <button
-          className="close-btn"
-          onClick={onClose}
-        >
-          ✕
-        </button>
+        {!embedded && (
+          <button className="close-btn" onClick={onClose} aria-label="Cerrar">
+            ×
+          </button>
+        )}
 
         <h2>PowerUp</h2>
 
         <div className="tabs">
-          <button
-            className={isLogin ? "active" : ""}
-            onClick={() => setIsLogin(true)}
-          >
+          <button className={isLogin ? "active" : ""} onClick={() => setIsLogin(true)}>
             Iniciar sesión
           </button>
 
-          <button
-            className={!isLogin ? "active" : ""}
-            onClick={() => setIsLogin(false)}
-          >
+          <button className={!isLogin ? "active" : ""} onClick={() => setIsLogin(false)}>
             Registrarse
           </button>
         </div>
 
         {isLogin ? (
-          <LoginForm onLoginSuccess={onClose} />
+          <LoginForm onLoginSuccess={onAuthenticated || onClose} />
         ) : (
-          <RegisterForm
-            onRegisterSuccess={() => {
-              setIsLogin(true);
-            }}
-          />
+          <RegisterForm onRegisterSuccess={onAuthenticated || onClose} />
         )}
       </div>
     </div>

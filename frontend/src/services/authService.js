@@ -1,7 +1,7 @@
-const API_URL = "http://localhost:3001/api/auth";
+import { apiRequest } from "./api";
 
 export async function login(email, password) {
-  const response = await fetch(`${API_URL}/login`, {
+  return apiRequest("/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,18 +11,10 @@ export async function login(email, password) {
       password,
     }),
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || data.message);
-  }
-
-  return data;
 }
 
 export async function register(nombre, email, password) {
-  const response = await fetch(`${API_URL}/register`, {
+  return apiRequest("/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,12 +25,4 @@ export async function register(nombre, email, password) {
       password,
     }),
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error || data.message);
-  }
-
-  return data;
 }
