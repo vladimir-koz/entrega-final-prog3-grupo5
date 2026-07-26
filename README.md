@@ -758,10 +758,15 @@ Pendiente para completar la entrega final:
 
 ## Documentacion Postman
 
-<<<<<<< HEAD
 ##Documentacion postman:
-=======
->>>>>>> origin/dev
+
+
+Pendiente para completar la entrega final:
+
+- visualizaciones en frontend usando las metricas disponibles.
+
+## Documentacion Postman
+
 https://documenter.getpostman.com/view/55411762/2sBXwwm7Sq
 
 Pendiente:
