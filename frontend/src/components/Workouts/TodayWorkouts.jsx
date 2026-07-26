@@ -1,13 +1,13 @@
 import { Dumbbell, Trash2 } from "lucide-react";
-import { formatTime } from "../../utils/dateUtils";
+import { formatDateTime } from "../../utils/dateUtils";
 
-function TodayWorkouts({ workouts, onDelete }) {
+function TodayWorkouts({ workouts = [], onDelete }) {
   return (
     <section className="content-section">
       <div className="section-heading">
         <div>
           <p className="eyebrow">Registro</p>
-          <h2>Actividad de hoy</h2>
+          <h2>Actividad reciente</h2>
         </div>
         <span className="muted">{workouts.length} sesiones</span>
       </div>
@@ -16,20 +16,22 @@ function TodayWorkouts({ workouts, onDelete }) {
         <div className="empty-state">
           <Dumbbell size={32} />
           <h3>Todavía no registraste actividad</h3>
-          <p>Tu primera sesión del día aparecerá acá.</p>
+          <p>Tu primera sesión aparecerá acá.</p>
         </div>
       ) : (
         workouts.map((workout) => (
           <article className="workout-entry" key={workout.id}>
             <div>
               <strong>{workout.nombre}</strong>
-              <span>{formatTime(workout.timestamp)}</span>
+              <span>{formatDateTime(workout.timestamp)}</span>
             </div>
 
             <div className="workout-sets">
               {workout.series?.map((set) => (
                 <span key={set.id}>
                   {set.exercise?.nombre}: {set.repeticiones} × {set.peso} kg
+                  {set.rir != null ? ` · RIR ${set.rir}` : ""}
+                  {set.rpe != null ? ` · RPE ${set.rpe}` : ""}
                 </span>
               ))}
             </div>

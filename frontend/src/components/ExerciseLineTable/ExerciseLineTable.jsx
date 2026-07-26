@@ -7,6 +7,7 @@ function ExerciseLineTable({
   onChange,
   weightLabel = "Peso (kg)",
   addLabel = "Agregar serie",
+  showIntensity = false,
 }) {
   function updateLine(index, field, value) {
     onChange(updateExerciseLine(lines, index, field, value));
@@ -20,18 +21,22 @@ function ExerciseLineTable({
     onChange([...lines, createEmptyExerciseLine()]);
   }
 
+  const rowClassName = `set-row${showIntensity ? " with-intensity" : ""}`;
+
   return (
     <>
       <div className="set-table">
-        <div className="set-row set-header">
+        <div className={`${rowClassName} set-header`}>
           <span>Ejercicio</span>
           <span>Repeticiones</span>
           <span>{weightLabel}</span>
+          {showIntensity && <span>RIR</span>}
+          {showIntensity && <span>RPE</span>}
           <span />
         </div>
 
         {lines.map((line, index) => (
-          <div className="set-row" key={line.id ?? index}>
+          <div className={rowClassName} key={line.id ?? index}>
             <select
               aria-label={`Ejercicio ${index + 1}`}
               value={line.exerciseId}
@@ -65,10 +70,37 @@ function ExerciseLineTable({
               required
             />
 
+            {showIntensity && (
+              <input
+                aria-label={`RIR ${index + 1}`}
+                title="Repeticiones que sentías que todavía podías realizar"
+                type="number"
+                min="0"
+                max="10"
+                value={line.rir}
+                onChange={(event) => updateLine(index, "rir", event.target.value)}
+                placeholder="Opcional"
+              />
+            )}
+
+            {showIntensity && (
+              <input
+                aria-label={`RPE ${index + 1}`}
+                title="Esfuerzo percibido de 1 a 10"
+                type="number"
+                min="1"
+                max="10"
+                step="0.5"
+                value={line.rpe}
+                onChange={(event) => updateLine(index, "rpe", event.target.value)}
+                placeholder="Opcional"
+              />
+            )}
+
             <button
               className="icon-button danger"
               type="button"
-              title="Quitar ejercicio"
+              title="Quitar serie"
               disabled={lines.length === 1}
               onClick={() => removeLine(index)}
             >

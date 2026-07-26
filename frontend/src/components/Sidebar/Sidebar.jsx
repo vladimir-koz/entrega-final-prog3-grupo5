@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
   Activity,
+  CalendarRange,
   ChartNoAxesColumnIncreasing,
   Dumbbell,
   LayoutDashboard,
@@ -26,6 +27,10 @@ function Sidebar() {
 
       <NavLink to="/rutinas">
         <Library size={18} /> Rutinas
+      </NavLink>
+
+      <NavLink to="/planes">
+        <CalendarRange size={18} /> Planes
       </NavLink>
 
       <NavLink to="/progreso">

@@ -225,6 +225,9 @@ textarea:focus {
   padding: 8px 0;
   border-bottom: 1px solid #222;
 }
+.set-row.with-intensity {
+  grid-template-columns: minmax(200px, 2fr) repeat(4, minmax(80px, 1fr)) 44px;
+}
 .set-header {
   color: #777;
   font-size: 12px;
@@ -468,6 +471,122 @@ textarea:focus {
   line-height: 1.5;
 }
 
+.planning-layout {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.7fr) minmax(0, 2fr);
+  gap: 18px;
+  align-items: start;
+}
+.plan-program-list,
+.plan-detail {
+  margin-top: 24px;
+}
+.program-option {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 14px;
+  background: #0c0c0c;
+  border: 1px solid #242424;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+.program-option small {
+  color: var(--muted);
+}
+.program-option.is-selected {
+  border-color: var(--accent);
+  background: #1c1012;
+}
+.plan-heading {
+  align-items: flex-start;
+}
+.program-weeks {
+  border-top: 1px solid var(--line);
+}
+.program-week {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+.week-heading,
+.week-actions,
+.scheduled-workout-row,
+.completed-label {
+  display: flex;
+  align-items: center;
+}
+.week-heading {
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+.week-heading h3 {
+  margin: 4px 0 6px;
+}
+.week-actions {
+  gap: 7px;
+}
+.status-badge,
+.completed-label {
+  min-height: 30px;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-badge {
+  background: #2a2210;
+  color: #e1bd68;
+}
+.scheduled-workout-list {
+  margin-bottom: 14px;
+}
+.scheduled-workout-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto auto;
+  gap: 12px;
+  min-height: 62px;
+  padding: 10px 0;
+  border-top: 1px solid #242424;
+}
+.scheduled-workout-row > svg {
+  color: var(--muted);
+}
+.scheduled-workout-row > div:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.scheduled-workout-row span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.completed-label {
+  background: #10251a;
+  color: var(--success) !important;
+}
+.compact-actions {
+  flex-wrap: nowrap;
+  margin-top: 0;
+}
+.empty-week {
+  padding: 14px 0;
+}
+.add-week-button {
+  margin-top: 20px;
+}
+.planning-check {
+  min-height: 44px;
+  align-self: end;
+  justify-content: center;
+}
 @media (max-width: 1000px) {
   .metric-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -504,8 +623,15 @@ textarea:focus {
   .set-row {
     grid-template-columns: 1fr 1fr 40px;
   }
+  .set-row.with-intensity {
+    grid-template-columns: 1fr 1fr 40px;
+  }
   .set-row select {
     grid-column: 1 / -1;
+  }
+  .set-row.with-intensity .icon-button {
+    grid-column: 3;
+    grid-row: 2 / span 2;
   }
   .workout-entry {
     grid-template-columns: 1fr 40px;
@@ -530,5 +656,24 @@ textarea:focus {
   }
   .account-row strong {
     grid-column: 2;
+  }
+}
+@media (max-width: 900px) {
+  .planning-layout {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .week-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .scheduled-workout-row {
+    grid-template-columns: 26px minmax(0, 1fr);
+  }
+  .scheduled-workout-row .completed-label,
+  .scheduled-workout-row .compact-actions {
+    grid-column: 2;
+    justify-self: start;
   }
 }
