@@ -20,8 +20,9 @@ export function filterExercises(exercises, search, difficulty) {
   const normalizedSearch = search.trim().toLowerCase();
 
   return exercises.filter((exercise) => {
-    const termMatch = exercise.nombre.toLowerCase().includes(normalizedSearch)
-      || (exercise.descripcion || "").toLowerCase().includes(normalizedSearch);
+    const termMatch =
+      exercise.nombre.toLowerCase().includes(normalizedSearch) ||
+      (exercise.descripcion || "").toLowerCase().includes(normalizedSearch);
     return termMatch && (!difficulty || exercise.dificultad === difficulty);
   });
 }

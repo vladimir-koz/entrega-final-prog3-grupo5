@@ -11,7 +11,6 @@ export async function login(email, password) {
       password,
     }),
   });
-
 }
 
 export async function register(nombre, email, password) {
@@ -26,5 +25,4 @@ export async function register(nombre, email, password) {
       password,
     }),
   });
-
 }

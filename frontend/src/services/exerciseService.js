@@ -11,7 +11,10 @@ export async function createExercise(payload) {
 }
 
 export async function updateExercise(id, payload) {
-  const data = await apiRequest(`/exercises/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+  const data = await apiRequest(`/exercises/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
   return data.exercise;
 }
 

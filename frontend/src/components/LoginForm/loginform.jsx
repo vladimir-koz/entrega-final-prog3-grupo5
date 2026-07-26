@@ -43,7 +43,11 @@ function LoginForm({ onLoginSuccess }) {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      {error && <p className="form-error" role="alert">{error}</p>}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
 
       <button className="login-btn" type="submit" disabled={submitting}>
         {submitting ? "Ingresando..." : "Iniciar sesión"}

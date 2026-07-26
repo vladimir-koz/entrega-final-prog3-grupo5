@@ -6,12 +6,18 @@ export async function getRoutines() {
 }
 
 export async function createRoutine(payload) {
-  const data = await apiRequest("/workout-templates", { method: "POST", body: JSON.stringify(payload) });
+  const data = await apiRequest("/workout-templates", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
   return data.workoutTemplate;
 }
 
 export async function updateRoutine(id, payload) {
-  const data = await apiRequest(`/workout-templates/${id}`, { method: "PUT", body: JSON.stringify(payload) });
+  const data = await apiRequest(`/workout-templates/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
   return data.workoutTemplate;
 }
 
@@ -25,7 +31,10 @@ export async function getRoutineExercises(routineId) {
 }
 
 export async function addRoutineExercise(payload) {
-  const data = await apiRequest("/workout-template-exercises", { method: "POST", body: JSON.stringify(payload) });
+  const data = await apiRequest("/workout-template-exercises", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
   return data.workoutTemplateExercise;
 }
 

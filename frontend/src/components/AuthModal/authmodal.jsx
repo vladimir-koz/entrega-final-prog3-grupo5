@@ -12,28 +12,20 @@ function AuthModal({ open, onClose, embedded = false, onAuthenticated }) {
   return (
     <div className={embedded ? "auth-panel" : "modal-overlay"}>
       <div className="modal">
-        {!embedded && <button
-          className="close-btn"
-          onClick={onClose}
-          aria-label="Cerrar"
-        >
-          ×
-        </button>}
+        {!embedded && (
+          <button className="close-btn" onClick={onClose} aria-label="Cerrar">
+            ×
+          </button>
+        )}
 
         <h2>PowerUp</h2>
 
         <div className="tabs">
-          <button
-            className={isLogin ? "active" : ""}
-            onClick={() => setIsLogin(true)}
-          >
+          <button className={isLogin ? "active" : ""} onClick={() => setIsLogin(true)}>
             Iniciar sesión
           </button>
 
-          <button
-            className={!isLogin ? "active" : ""}
-            onClick={() => setIsLogin(false)}
-          >
+          <button className={!isLogin ? "active" : ""} onClick={() => setIsLogin(false)}>
             Registrarse
           </button>
         </div>
@@ -41,9 +33,7 @@ function AuthModal({ open, onClose, embedded = false, onAuthenticated }) {
         {isLogin ? (
           <LoginForm onLoginSuccess={onAuthenticated || onClose} />
         ) : (
-          <RegisterForm
-            onRegisterSuccess={onAuthenticated || onClose}
-          />
+          <RegisterForm onRegisterSuccess={onAuthenticated || onClose} />
         )}
       </div>
     </div>

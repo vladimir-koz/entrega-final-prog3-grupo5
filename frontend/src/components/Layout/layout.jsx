@@ -9,9 +9,7 @@ function Layout({ children }) {
       <div className="dashboard-container">
         <Sidebar />
 
-        <main className="dashboard-content">
-          {children}
-        </main>
+        <main className="dashboard-content">{children}</main>
       </div>
     </>
   );

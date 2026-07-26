@@ -7,9 +7,24 @@ import { getProfile } from "../services/profileService";
 import "../styles/app.css";
 
 function Cuenta() {
-  const [profile, setProfile] = useState(null); const [error, setError] = useState("");
-  useEffect(() => { getProfile().then(setProfile).catch((requestError) => setError(requestError.message)); }, []);
-  return <Layout><PageHeader eyebrow="Perfil" title="Mi cuenta" description="Datos asociados a tu acceso de PowerUp." /><ErrorNotice message={error} /><AccountDetails profile={profile} /></Layout>;
+  const [profile, setProfile] = useState(null);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    getProfile()
+      .then(setProfile)
+      .catch((requestError) => setError(requestError.message));
+  }, []);
+  return (
+    <Layout>
+      <PageHeader
+        eyebrow="Perfil"
+        title="Mi cuenta"
+        description="Datos asociados a tu acceso de PowerUp."
+      />
+      <ErrorNotice message={error} />
+      <AccountDetails profile={profile} />
+    </Layout>
+  );
 }
 
 export default Cuenta;

@@ -64,7 +64,11 @@ function RegisterForm({ onRegisterSuccess }) {
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
 
-      {error && <p className="form-error" role="alert">{error}</p>}
+      {error && (
+        <p className="form-error" role="alert">
+          {error}
+        </p>
+      )}
 
       <button className="login-btn" type="submit" disabled={submitting}>
         {submitting ? "Creando cuenta..." : "Registrarse"}

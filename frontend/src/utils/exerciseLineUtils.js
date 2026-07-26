@@ -3,9 +3,7 @@ export function createEmptyExerciseLine() {
 }
 
 export function updateExerciseLine(lines, index, field, value) {
-  return lines.map((line, lineIndex) => (
-    lineIndex === index ? { ...line, [field]: value } : line
-  ));
+  return lines.map((line, lineIndex) => (lineIndex === index ? { ...line, [field]: value } : line));
 }
 
 export function hydrateExerciseLines(lines) {

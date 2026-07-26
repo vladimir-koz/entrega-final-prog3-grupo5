@@ -1,7 +1,9 @@
 import { apiRequest } from "./api";
 
 function queryString(params) {
-  const query = new URLSearchParams(Object.entries(params).filter(([, value]) => value !== "" && value != null));
+  const query = new URLSearchParams(
+    Object.entries(params).filter(([, value]) => value !== "" && value != null),
+  );
   return query.toString() ? `?${query}` : "";
 }
 

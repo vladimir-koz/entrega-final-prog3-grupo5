@@ -15,32 +15,20 @@ function Navbar() {
 
         {user ? (
           <div className="user-section">
-            <span className="user-name">
-              Hola, {user.nombre}
-            </span>
+            <span className="user-name">Hola, {user.nombre}</span>
 
-            <button
-              className="logout-btn"
-              onClick={logout}
-              title="Cerrar sesión"
-            >
+            <button className="logout-btn" onClick={logout} title="Cerrar sesión">
               <LogOut size={18} /> <span>Cerrar sesión</span>
             </button>
           </div>
         ) : (
-          <button
-            className="login-btn-navbar"
-            onClick={() => setOpenModal(true)}
-          >
+          <button className="login-btn-navbar" onClick={() => setOpenModal(true)}>
             Iniciar sesión
           </button>
         )}
       </header>
 
-      <AuthModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-      />
+      <AuthModal open={openModal} onClose={() => setOpenModal(false)} />
     </>
   );
 }
