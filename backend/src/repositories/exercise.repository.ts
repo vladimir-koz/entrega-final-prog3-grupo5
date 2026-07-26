@@ -33,6 +33,23 @@ export async function findExercises(userId: number) {
   });
 }
 
+export async function findExercisesByMuscleGroup(userId: number, muscleGroupId: number) {
+  return Exercise.findAll({
+    where: {
+      [Op.or]: [{ userId: null }, { userId }]
+    },
+    include: [
+      {
+        model: MuscleGroup,
+        as: 'muscleGroups',
+        through: { attributes: [] },
+        where: { id: muscleGroupId }
+      }
+    ],
+    order: [['nombre', 'ASC']]
+  });
+}
+
 export async function findExerciseById(id: number, userId: number) {
   return Exercise.findOne({
     where: {

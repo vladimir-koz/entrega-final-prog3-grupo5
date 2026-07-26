@@ -5,6 +5,7 @@ import {
   deleteExercise as deleteExerciseRepo,
   findExerciseById,
   findExercises,
+  findExercisesByMuscleGroup,
   updateExercise as updateExerciseRepo
 } from '../repositories/exercise.repository';
 import { replaceExerciseMuscleGroups } from '../repositories/exerciseMuscleGroup.repository';
@@ -52,6 +53,18 @@ async function validateMuscleGroupsVisible(muscleGroupIds: number[] | undefined,
 
 export async function listExercises(userId: number) {
   const exercises = await findExercises(userId);
+
+  return { exercises };
+}
+
+export async function listExercisesByMuscleGroup(muscleGroupId: number, userId: number) {
+  const muscleGroup = await findMuscleGroupById(muscleGroupId, userId);
+
+  if (!muscleGroup) {
+    throw new AppError('Grupo muscular no encontrado', 404);
+  }
+
+  const exercises = await findExercisesByMuscleGroup(userId, muscleGroupId);
 
   return { exercises };
 }

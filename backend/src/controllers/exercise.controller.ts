@@ -4,6 +4,7 @@ import {
   deleteExercise,
   getExerciseById,
   listExercises,
+  listExercisesByMuscleGroup,
   updateExercise
 } from '../services/exercise.service';
 import { AppError } from '../utils/AppError';
@@ -19,6 +20,22 @@ function getAuthenticatedUserId(req: Request): number {
 export async function index(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const result = await listExercises(getAuthenticatedUserId(req));
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function byMuscleGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const muscleGroupId = Number(req.params.muscleGroupId);
+
+    if (!Number.isInteger(muscleGroupId) || muscleGroupId < 1) {
+      res.status(400).json({ error: 'muscleGroupId debe ser un ID valido' });
+      return;
+    }
+
+    const result = await listExercisesByMuscleGroup(muscleGroupId, getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {
     next(error);
