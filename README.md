@@ -751,6 +751,7 @@ Implementado:
 - validaciones de entrada en rutas principales
 - tests basicos de API para health, rutas inexistentes, autenticacion y validaciones
 - metricas de resumen, heatmap de actividad y progreso por ejercicio
+- Filtros de ejercicios por grupo muscular
 
 Pendiente para completar la entrega final:
 

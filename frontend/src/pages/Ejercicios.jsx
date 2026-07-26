@@ -18,6 +18,8 @@ function Ejercicios() {
     setSearch,
     difficulty,
     setDifficulty,
+    groupId,
+    setGroupId,
     selectedId,
     setSelectedId,
     editing,
@@ -59,8 +61,11 @@ function Ejercicios() {
         <ExerciseFilters
           search={search}
           difficulty={difficulty}
+          groupId={groupId}
+          groups={groups}
           onSearchChange={setSearch}
           onDifficultyChange={setDifficulty}
+          onGroupChange={setGroupId}
         />
         <ExerciseList
           exercises={exercises}

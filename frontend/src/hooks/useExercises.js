@@ -13,6 +13,7 @@ export function useExercises() {
   const [groups, setGroups] = useState([]);
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [groupId, setGroupId] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_EXERCISE);
@@ -85,12 +86,14 @@ export function useExercises() {
   }
 
   return {
-    exercises: filterExercises(exercises, search, difficulty),
+    exercises: filterExercises(exercises, search, difficulty, groupId),
     groups,
     search,
     setSearch,
     difficulty,
     setDifficulty,
+    groupId,
+    setGroupId,
     selectedId,
     setSelectedId,
     editing: Boolean(editingId),

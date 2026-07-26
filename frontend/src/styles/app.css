@@ -303,7 +303,7 @@ textarea:focus {
 }
 .filter-bar {
   display: grid;
-  grid-template-columns: 1fr 230px;
+  grid-template-columns: 1fr 230px 230px;
   gap: 12px;
   margin-bottom: 20px;
 }
