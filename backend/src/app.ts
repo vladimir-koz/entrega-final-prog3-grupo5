@@ -7,8 +7,11 @@ import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 
 const app = express();
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+app.use(
+    cors({
+        origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+        credentials: true,
+    
 }));
 
 app.use(helmet());

@@ -30,11 +30,6 @@ export async function byMuscleGroup(req: Request, res: Response, next: NextFunct
   try {
     const muscleGroupId = Number(req.params.muscleGroupId);
 
-    if (!Number.isInteger(muscleGroupId) || muscleGroupId < 1) {
-      res.status(400).json({ error: 'muscleGroupId debe ser un ID valido' });
-      return;
-    }
-
     const result = await listExercisesByMuscleGroup(muscleGroupId, getAuthenticatedUserId(req));
     res.json(result);
   } catch (error) {

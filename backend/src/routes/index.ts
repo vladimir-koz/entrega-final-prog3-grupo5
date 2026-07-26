@@ -2,9 +2,13 @@ import { Router } from 'express';
 import authRoutes from './auth.routes';
 import exerciseRoutes from './exercise.routes';
 import muscleGroupRoutes from './muscleGroup.routes';
-import routineRoutes from './routine.routes';
-import routineSetRoutes from './routineSet.routes';
+import workoutTemplateRoutes from './workoutTemplate.routes';
+import workoutTemplateExerciseRoutes from './workoutTemplateExercise.routes';
+import trainingProgramRoutes from './trainingProgram.routes';
+import programWeekRoutes from './programWeek.routes';
+import scheduledWorkoutRoutes from './scheduledWorkout.routes';
 import workoutRoutes from './workout.routes';
+import metricsRoutes from './metrics.routes';
 
 const router = Router();
 
@@ -20,9 +24,13 @@ router.get('/health', (_req, res) => {
 router.use('/auth', authRoutes);
 router.use('/exercises', exerciseRoutes);
 router.use('/muscle-groups', muscleGroupRoutes);
-router.use('/routines', routineRoutes);
-router.use('/routine-sets', routineSetRoutes);
+router.use('/workout-templates', workoutTemplateRoutes);
+router.use('/workout-template-exercises', workoutTemplateExerciseRoutes);
+router.use('/training-programs', trainingProgramRoutes);
+router.use('/program-weeks', programWeekRoutes);
+router.use('/scheduled-workouts', scheduledWorkoutRoutes);
 router.use('/workouts', workoutRoutes);
+router.use('/metrics', metricsRoutes);
 
 
 export default router;
