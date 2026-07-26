@@ -27,6 +27,23 @@ export function formatTime(timestamp) {
   });
 }
 
+export function formatDateTime(timestamp) {
+  return new Date(timestamp).toLocaleString("es-AR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+}
+
+export function formatDateOnly(timestamp) {
+  const [year, month, day] = String(timestamp).slice(0, 10).split("-").map(Number);
+
+  if (!year || !month || !day) {
+    return "Fecha no disponible";
+  }
+
+  return new Date(year, month - 1, day).toLocaleDateString("es-AR");
+}
+
 export function getWeekRange(referenceDate = new Date()) {
   const day = referenceDate.getDay() || 7;
   const from = new Date(referenceDate);
