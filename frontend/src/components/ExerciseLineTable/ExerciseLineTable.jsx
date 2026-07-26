@@ -1,8 +1,5 @@
 import { Plus, Trash2 } from "lucide-react";
-import {
-  createEmptyExerciseLine,
-  updateExerciseLine,
-} from "../../utils/exerciseLineUtils";
+import { createEmptyExerciseLine, updateExerciseLine } from "../../utils/exerciseLineUtils";
 
 function ExerciseLineTable({
   lines,

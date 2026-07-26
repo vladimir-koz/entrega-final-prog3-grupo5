@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Activity, ChartNoAxesColumnIncreasing, Dumbbell, Layers3, Play } from "lucide-react";
 import WeeklyBreakdown from "../components/Dashboard/WeeklyBreakdown";
@@ -6,25 +5,13 @@ import ErrorNotice from "../components/Feedback/ErrorNotice";
 import Layout from "../components/Layout/Layout";
 import MetricGrid from "../components/Metrics/MetricGrid";
 import PageHeader from "../components/PageHeader/PageHeader";
-import { getActivity, getSummary } from "../services/metricsService";
-import { getWeekDays, getWeekRange } from "../utils/dateUtils";
+import { useDashboardMetrics } from "../hooks/useDashboardMetrics";
+import { getWeekDays } from "../utils/dateUtils";
 import "../styles/app.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [summary, setSummary] = useState(null);
-  const [activity, setActivity] = useState([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const range = getWeekRange();
-    Promise.all([getSummary(range), getActivity(range)])
-      .then(([summaryData, activityData]) => {
-        setSummary(summaryData);
-        setActivity(activityData);
-      })
-      .catch((requestError) => setError(requestError.message));
-  }, []);
+  const { summary, activity, error } = useDashboardMetrics();
 
   const cards = [
     { label: "Entrenamientos", value: summary?.workouts ?? "-", icon: Dumbbell },

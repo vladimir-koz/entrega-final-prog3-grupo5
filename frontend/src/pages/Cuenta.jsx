@@ -1,19 +1,13 @@
-import { useEffect, useState } from "react";
 import AccountDetails from "../components/Account/AccountDetails";
 import ErrorNotice from "../components/Feedback/ErrorNotice";
 import Layout from "../components/Layout/Layout";
 import PageHeader from "../components/PageHeader/PageHeader";
-import { getProfile } from "../services/profileService";
+import { useProfile } from "../hooks/useProfile";
 import "../styles/app.css";
 
 function Cuenta() {
-  const [profile, setProfile] = useState(null);
-  const [error, setError] = useState("");
-  useEffect(() => {
-    getProfile()
-      .then(setProfile)
-      .catch((requestError) => setError(requestError.message));
-  }, []);
+  const { profile, error } = useProfile();
+
   return (
     <Layout>
       <PageHeader
