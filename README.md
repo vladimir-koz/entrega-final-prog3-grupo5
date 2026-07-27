@@ -13,7 +13,7 @@ Completar estas direcciones después del despliegue:
 | Frontend en Vercel       | `https://front-entrega-final-prog3-grupo5-phi.vercel.app`     |
 | API en Render            | `https://backend-entrega-final-prog3-grupo5.onrender.com`            |
 | Health de la API         | `https://backend-entrega-final-prog3-grupo5.onrender.com/api/health` |
-| Documentación de Postman | https://documenter.getpostman.com/view/55411762/2sBY4Qu1git add README.md12           |
+| Documentación de Postman | https://documenter.getpostman.com/view/55411762/2sBY4Qu112           |
 
 ## Funcionalidades
 
