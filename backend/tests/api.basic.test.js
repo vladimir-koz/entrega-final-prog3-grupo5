@@ -122,6 +122,20 @@ describe('API base', () => {
     expect(response.body.error).toBe('Datos invalidos');
   });
 
+  test('filtro de ejercicios exige muscleGroupId valido', async () => {
+    const response = await request(app)
+      .get('/api/exercises?muscleGroupId=abc')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(400);
+
+    expect(response.body.error).toBe('Datos invalidos');
+    expect(response.body.details).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ field: 'muscleGroupId' })
+      ])
+    );
+  });
+
   test('metrics sin token devuelve 401', async () => {
     const response = await request(app)
       .get('/api/metrics/summary')
