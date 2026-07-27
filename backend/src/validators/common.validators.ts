@@ -23,6 +23,12 @@ export const requiredPositiveIntQuery = (field: string) => query(field)
   .withMessage(`${field} debe ser un entero positivo`)
   .toInt();
 
+export const optionalPositiveIntQuery = (field: string) => query(field)
+  .optional()
+  .isInt({ min: 1 })
+  .withMessage(`${field} debe ser un entero positivo`)
+  .toInt();
+
 export const requiredTextBody = (field: string, label = field) => body(field)
   .isString()
   .withMessage(`${label} debe ser texto`)

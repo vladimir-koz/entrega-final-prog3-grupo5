@@ -10,7 +10,7 @@ Completar estas direcciones después del despliegue:
 
 | Servicio                 | URL                                                                  |
 | ------------------------ | -------------------------------------------------------------------- |
-| Frontend en Vercel       | `PENDIENTE`                                                          |
+| Frontend en Vercel       | `https://front-entrega-final-prog3-grupo5-ri9phti04.vercel.app/`     |
 | API en Render            | `https://backend-entrega-final-prog3-grupo5.onrender.com`            |
 | Health de la API         | `https://backend-entrega-final-prog3-grupo5.onrender.com/api/health` |
 | Documentación de Postman | https://documenter.getpostman.com/view/55411762/2sBY4Qu112           |
@@ -29,6 +29,7 @@ Completar estas direcciones después del despliegue:
 - Catálogo global precargado.
 - Ejercicios y grupos musculares personales.
 - Relación muchos a muchos entre ejercicios y grupos musculares.
+- Búsqueda y filtros por dificultad y grupo muscular.
 - Los recursos personales solamente son visibles para su propietario.
 
 ### Rutinas
@@ -504,6 +505,7 @@ Authorization: Bearer TOKEN
 Filtros requeridos:
 
 ```http
+GET /exercises?muscleGroupId=1
 GET /program-weeks?trainingProgramId=1
 GET /scheduled-workouts?programWeekId=1
 GET /workout-template-exercises?workoutTemplateId=1

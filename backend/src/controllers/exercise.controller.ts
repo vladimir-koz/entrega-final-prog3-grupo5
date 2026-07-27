@@ -4,6 +4,7 @@ import {
   deleteExercise,
   getExerciseById,
   listExercises,
+  listExercisesByMuscleGroup,
   updateExercise
 } from '../services/exercise.service';
 import { AppError } from '../utils/AppError';
@@ -18,7 +19,12 @@ function getAuthenticatedUserId(req: Request): number {
 
 export async function index(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const result = await listExercises(getAuthenticatedUserId(req));
+    const userId = getAuthenticatedUserId(req);
+    const muscleGroupId = req.query.muscleGroupId;
+    const result = muscleGroupId === undefined
+      ? await listExercises(userId)
+      : await listExercisesByMuscleGroup(Number(muscleGroupId), userId);
+
     res.json(result);
   } catch (error) {
     next(error);
